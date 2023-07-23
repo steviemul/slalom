@@ -6,7 +6,6 @@ import io.steviemul.slalom.model.java.CompilationUnit;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
 public class Parser {
 
@@ -18,13 +17,9 @@ public class Parser {
     JavaParser tokenParser = new JavaParser(tokens);
 
     ParseTree parseTree = tokenParser.compilationUnit();
-    ParseTreeWalker walker = new ParseTreeWalker();
 
-    ParseContext parseContext = new ParseContext();
-    ParseTreeListener parseTreeListener = new ParseTreeListener(parseContext);
+    ParseTreeVisitor parser = new ParseTreeVisitor();
 
-    walker.walk(parseTreeListener, parseTree);
-
-    return parseContext.popRequiredType(CompilationUnit.class);
+    return parser.visit(parseTree);
   }
 }

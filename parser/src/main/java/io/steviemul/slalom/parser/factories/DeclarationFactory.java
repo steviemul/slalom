@@ -9,11 +9,12 @@ import io.steviemul.slalom.model.java.MethodDeclaration;
 import io.steviemul.slalom.model.java.ModifiableRef;
 import io.steviemul.slalom.model.java.Ref;
 import io.steviemul.slalom.model.java.StaticBlockDeclaration;
+import io.steviemul.slalom.model.java.VariableDeclaration;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import io.steviemul.slalom.model.java.VariableDeclaration;
 import org.antlr.v4.runtime.ParserRuleContext;
+
+import static io.steviemul.slalom.utils.ObjectUtils.isDefined;
 
 public class DeclarationFactory {
 
@@ -39,6 +40,8 @@ public class DeclarationFactory {
     }
     else if (ctx.STATIC() != null) {
       declaration = new StaticBlockDeclaration();
+      ((StaticBlockDeclaration)declaration).block(
+          StatementFactory.fromContext(ctx.block()));
     }
 
     if (ctx.modifier() != null) {
@@ -77,11 +80,11 @@ public class DeclarationFactory {
     ClassDeclaration classDeclaration = new ClassDeclaration();
     classDeclaration.name(ctx.identifier().getText());
 
-    if (ctx.EXTENDS() != null) {
+    if (isDefined(ctx.EXTENDS())) {
       classDeclaration.parentClass(ctx.typeType().getText());
     }
 
-    if (ctx.IMPLEMENTS() != null) {
+    if (isDefined(ctx.IMPLEMENTS())) {
       List<String> interfaces = ctx.typeList().stream()
           .flatMap(tl -> tl.typeType().stream())
           .map(JavaParser.TypeTypeContext::getText)
@@ -90,12 +93,25 @@ public class DeclarationFactory {
       classDeclaration.interfaces(interfaces);
     }
 
+    if (isDefined(ctx.classBody())) {
+      classDeclaration.memberDeclarations(
+          ctx.classBody()
+              .classBodyDeclaration().stream()
+              .map(DeclarationFactory::fromContext)
+              .collect(Collectors.toList()));
+    }
     return classDeclaration;
   }
 
   public static FieldDeclaration fromContext(JavaParser.FieldDeclarationContext ctx) {
     FieldDeclaration fieldDeclaration = new FieldDeclaration();
 
+    fieldDeclaration.type(ctx.typeType().getText());
+    fieldDeclaration.variableDeclarations(ctx.variableDeclarators()
+        .variableDeclarator().stream()
+        .map(DeclarationFactory::fromContext)
+        .collect(Collectors.toList()));
+;
     return fieldDeclaration;
   }
 
@@ -105,6 +121,16 @@ public class DeclarationFactory {
 
     methodDeclaration.name(ctx.identifier().getText());
 
+    if (isDefined(ctx.formalParameters(), ctx.formalParameters().formalParameterList())) {
+      methodDeclaration.parameters(ctx.formalParameters()
+          .formalParameterList().formalParameter()
+          .stream().map(DeclarationFactory::fromContext).collect(Collectors.toList()));
+    }
+
+    if (isDefined(ctx.methodBody().block())) {
+      methodDeclaration.block(StatementFactory.fromContext(ctx.methodBody().block()));
+    }
+
     return methodDeclaration;
   }
 
@@ -112,6 +138,12 @@ public class DeclarationFactory {
     VariableDeclaration variableDeclaration = new VariableDeclaration();
 
     variableDeclaration.name(ctx.variableDeclaratorId().identifier().getText());
+
+    if (ctx.variableInitializer() != null) {
+      variableDeclaration.initialValue(
+          ExpressionFactory.fromContext(
+              ctx.variableInitializer().expression()));
+    }
 
     return variableDeclaration;
   }
@@ -121,6 +153,7 @@ public class DeclarationFactory {
     VariableDeclaration variableDeclaration = new VariableDeclaration();
 
     variableDeclaration.name(ctx.variableDeclaratorId().identifier().getText());
+    variableDeclaration.type(ctx.typeType().getText());
 
     return variableDeclaration;
   }

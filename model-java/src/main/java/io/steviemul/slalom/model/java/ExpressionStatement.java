@@ -12,6 +12,7 @@ import java.util.List;
 @Setter
 @Accessors(fluent = true)
 @ToString
-public class BlockRef extends Ref {
-  private List<Statement> statements = new ArrayList<>();
+public class ExpressionStatement extends Statement {
+  private Operator operator;
+  private List<Expression> expressions = new ArrayList<>();
 }

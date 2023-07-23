@@ -12,7 +12,5 @@ import lombok.experimental.Accessors;
 @Accessors(fluent = true)
 @ToString
 public class FieldDeclaration extends Declaration {
-
   private List<VariableDeclaration> variableDeclarations = new ArrayList<>();
-  
 }

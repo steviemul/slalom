@@ -13,5 +13,5 @@ import lombok.experimental.Accessors;
 @ToString
 public class MethodDeclaration extends Declaration {
   private List<VariableDeclaration> parameters = new ArrayList<>();
-  private BlockRef block = new BlockRef();
+  private BlockStatement block = new BlockStatement();
 }

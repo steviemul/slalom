@@ -9,9 +9,6 @@ import lombok.experimental.Accessors;
 @Setter
 @Accessors(fluent = true)
 @ToString
-public class IfStatement extends Statement {
-
-  private Expression expression;
-  private Statement thenStatement;
-  private Statement elseStatement;
+public class IdentifierExpression extends Expression {
+  private String name;
 }

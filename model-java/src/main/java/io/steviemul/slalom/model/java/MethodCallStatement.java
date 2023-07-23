@@ -12,7 +12,7 @@ import java.util.List;
 @Setter
 @Accessors(fluent = true)
 @ToString
-public class LocalVariableDeclarationStatement extends Statement {
-  private String type;
-  private List<VariableDeclaration> variableDeclarations = new ArrayList<>();
+public class MethodCallStatement extends ExpressionStatement {
+  private IdentifierExpression method;
+  private List<Expression> parameters = new ArrayList<>();
 }

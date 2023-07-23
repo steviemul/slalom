@@ -10,5 +10,5 @@ import lombok.experimental.Accessors;
 @Accessors(fluent = true)
 @ToString
 public class StaticBlockDeclaration extends Declaration {
-  private BlockRef block = new BlockRef();
+  private BlockStatement block = new BlockStatement();
 }

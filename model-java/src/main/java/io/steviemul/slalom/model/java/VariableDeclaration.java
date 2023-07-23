@@ -10,5 +10,5 @@ import lombok.experimental.Accessors;
 @Accessors(fluent = true)
 @ToString
 public class VariableDeclaration extends Declaration {
-  
+  private Expression initialValue;
 }

@@ -5,13 +5,14 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 @Accessors(fluent = true)
 @ToString
-public class IfStatement extends Statement {
-
-  private Expression expression;
-  private Statement thenStatement;
-  private Statement elseStatement;
+public class CreatorExpression extends Expression {
+  private IdentifierExpression type;
+  private List<Expression> parameters = new ArrayList<>();
 }
