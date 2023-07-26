@@ -5,7 +5,7 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
-@Getter
+@Getter(onMethod = @__(@JsonProperty))
 @Setter
 @Accessors(fluent = true)
 @ToString

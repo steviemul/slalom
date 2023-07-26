@@ -261,7 +261,7 @@ LINE_COMMENT
 IDENTIFIER
 
 rule names:
-compilationUnit
+ASTRoot
 packageDeclaration
 importDeclaration
 typeDeclaration

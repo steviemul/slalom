@@ -30,6 +30,7 @@
     <logback.version>1.4.6</logback.version>
     <bcel.version>6.7.0</bcel.version>
     <reflections.version>0.9.12</reflections.version>
+    <jackson.version>2.15.2</jackson.version>
   </properties>
 
   <dependencies>

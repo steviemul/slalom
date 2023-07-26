@@ -11,9 +11,8 @@ import java.util.Optional;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
-import io.steviemul.slalom.model.java.CompilationUnit;
+import io.steviemul.slalom.model.java.ASTRoot;
 import io.steviemul.slalom.model.java.ImportDeclaration;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.bcel.Repository;
 import org.apache.bcel.classfile.ClassParser;
@@ -28,11 +27,11 @@ public class TypeResolver {
 
   private static final Map<String, List<MethodDefinition>> typeDefinitions = new TreeMap<>();
 
-  public static void resolveTypes(CompilationUnit compilationUnit) {
+  public static void resolveTypes(ASTRoot ASTRoot) {
 
     Date start = new Date();
 
-    for (ImportDeclaration importDeclaration : compilationUnit.importDeclarations()) {
+    for (ImportDeclaration importDeclaration : ASTRoot.importDeclarations()) {
 
       if (!importDeclaration.wildcard()) {
         lookupClass(importDeclaration.name()).ifPresent(TypeResolver::readMethods);

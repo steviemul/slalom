@@ -2,31 +2,30 @@ package io.steviemul.slalom.parser;
 
 import io.steviemul.slalom.antlr.JavaParser;
 import io.steviemul.slalom.antlr.JavaParserBaseVisitor;
-import io.steviemul.slalom.model.java.CompilationUnit;
+import io.steviemul.slalom.model.java.ASTRoot;
 import io.steviemul.slalom.model.java.ImportDeclaration;
 import io.steviemul.slalom.model.java.PackageDeclaration;
 import io.steviemul.slalom.parser.factories.DeclarationFactory;
 
-public class ParseTreeVisitor extends JavaParserBaseVisitor<CompilationUnit> {
+public class ParseTreeVisitor extends JavaParserBaseVisitor<ASTRoot> {
 
   private final DeclarationFactory declarationFactory = new DeclarationFactory();
 
   @Override
-  public CompilationUnit visitCompilationUnit(JavaParser.CompilationUnitContext ctx) {
-    CompilationUnit compilationUnit = new CompilationUnit();
+  public ASTRoot visitCompilationUnit(JavaParser.CompilationUnitContext ctx) {
+    ASTRoot ASTRoot = new ASTRoot();
 
     if (ctx.packageDeclaration() != null) {
-      compilationUnit.packageDeclaration(packageDeclaration(ctx.packageDeclaration()));
+      ASTRoot.packageDeclaration(packageDeclaration(ctx.packageDeclaration()));
     }
 
-    ctx.importDeclaration()
-        .forEach(i -> compilationUnit.importDeclarations().add(importDeclaration(i)));
+    ctx.importDeclaration().forEach(i -> ASTRoot.importDeclarations().add(importDeclaration(i)));
 
     if (ctx.typeDeclaration(0) != null) {
-      compilationUnit.typeDeclaration(declarationFactory.fromContext(ctx.typeDeclaration(0)));
+      ASTRoot.typeDeclaration(declarationFactory.fromContext(ctx.typeDeclaration(0)));
     }
 
-    return compilationUnit;
+    return ASTRoot;
   }
 
   private PackageDeclaration packageDeclaration(JavaParser.PackageDeclarationContext ctx) {

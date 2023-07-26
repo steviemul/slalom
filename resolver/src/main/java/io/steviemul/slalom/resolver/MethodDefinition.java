@@ -1,10 +1,12 @@
 package io.steviemul.slalom.resolver;
 
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Getter;
 
-@Getter
+@Getter(onMethod = @__(@JsonProperty))
 @Builder
 public class MethodDefinition {
 

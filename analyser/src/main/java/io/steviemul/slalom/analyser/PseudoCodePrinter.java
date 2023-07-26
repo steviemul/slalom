@@ -1,8 +1,8 @@
 package io.steviemul.slalom.analyser;
 
+import io.steviemul.slalom.model.java.ASTRoot;
 import io.steviemul.slalom.model.java.BlockStatement;
 import io.steviemul.slalom.model.java.ClassDeclaration;
-import io.steviemul.slalom.model.java.CompilationUnit;
 import io.steviemul.slalom.model.java.ConstructorDeclaration;
 import io.steviemul.slalom.model.java.CreatorExpression;
 import io.steviemul.slalom.model.java.Declaration;
@@ -31,14 +31,14 @@ public class PseudoCodePrinter {
   private final OutputStream out;
   private int indent = 0;
 
-  public void print(CompilationUnit compilationUnit) {
+  public void print(ASTRoot ASTRoot) {
 
-    println("Path : ", compilationUnit.path());
-    println("package ", compilationUnit.packageDeclaration().name());
+    println("Path : ", ASTRoot.path());
+    println("package ", ASTRoot.packageDeclaration().name());
 
-    compilationUnit.importDeclarations().forEach(i -> println("import ", i.name()));
+    ASTRoot.importDeclarations().forEach(i -> println("import ", i.name()));
 
-    printDeclaration(compilationUnit.typeDeclaration());
+    printDeclaration(ASTRoot.typeDeclaration());
   }
 
   private void printDeclaration(Declaration declaration) {

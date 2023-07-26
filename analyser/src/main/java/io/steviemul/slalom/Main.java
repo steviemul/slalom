@@ -2,9 +2,10 @@ package io.steviemul.slalom;
 
 import io.steviemul.slalom.analyser.PseudoCodePrinter;
 import io.steviemul.slalom.gui.Visualizer;
-import io.steviemul.slalom.model.java.CompilationUnit;
+import io.steviemul.slalom.model.java.ASTRoot;
 import io.steviemul.slalom.parser.Parser;
 import io.steviemul.slalom.resolver.TypeResolver;
+import io.steviemul.slalom.serializer.ASTRootSerializer;
 import io.steviemul.slalom.utils.IOUtils;
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,18 +28,19 @@ public class Main {
 
       Date start = new Date();
 
-      CompilationUnit compilationUnit = parser.parse(source);
+      ASTRoot ASTRoot = parser.parse(source);
 
-      compilationUnit.path(path);
+      ASTRoot.path(path);
 
       log.info("Parsed [{}], took {}ms", path, new Date().getTime() - start.getTime());
 
-      TypeResolver.resolveTypes(compilationUnit);
+      TypeResolver.resolveTypes(ASTRoot);
 
-      PseudoCodePrinter printer = new PseudoCodePrinter(System.out);
+      String astOutput = ASTRootSerializer.toJson(ASTRoot);
 
-      printer.print(compilationUnit);
+      ASTRoot readAstRoot = ASTRootSerializer.fromJsonString(astOutput);
 
+      System.out.println(astOutput);
     } catch (Exception e) {
       log.error("Error parsing source", e);
     }

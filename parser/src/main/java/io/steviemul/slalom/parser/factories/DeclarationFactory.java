@@ -10,6 +10,8 @@ import io.steviemul.slalom.model.java.ModifiableRef;
 import io.steviemul.slalom.model.java.Ref;
 import io.steviemul.slalom.model.java.StaticBlockDeclaration;
 import io.steviemul.slalom.model.java.VariableDeclaration;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -119,12 +121,7 @@ public class DeclarationFactory {
     methodDeclaration.name(ctx.identifier().getText());
     methodDeclaration.type(fromContext(ctx.typeTypeOrVoid()));
 
-    if (isDefined(ctx.formalParameters(), ctx.formalParameters().formalParameterList())) {
-      methodDeclaration.parameters(
-          ctx.formalParameters().formalParameterList().formalParameter().stream()
-              .map(DeclarationFactory::fromContext)
-              .collect(Collectors.toList()));
-    }
+    methodDeclaration.parameters(fromContext(ctx.formalParameters()));
 
     if (isDefined(ctx.methodBody().block())) {
       methodDeclaration.block(StatementFactory.fromContext(ctx.methodBody().block()));
@@ -171,18 +168,24 @@ public class DeclarationFactory {
     constructorDeclaration.name(ctx.identifier().getText());
     constructorDeclaration.type(ctx.identifier().getText());
 
-    if (isDefined(ctx.formalParameters(), ctx.formalParameters().formalParameterList())) {
-      constructorDeclaration.parameters(
-          ctx.formalParameters().formalParameterList().formalParameter().stream()
-              .map(DeclarationFactory::fromContext)
-              .collect(Collectors.toList()));
-    }
+    constructorDeclaration.parameters(fromContext(ctx.formalParameters()));
 
     if (isDefined(ctx.block())) {
       constructorDeclaration.block(StatementFactory.fromContext(ctx.block()));
     }
 
     return constructorDeclaration;
+  }
+
+  public static List<VariableDeclaration> fromContext(JavaParser.FormalParametersContext ctx) {
+
+    if (ctx != null && ctx.formalParameterList() != null) {
+      return ctx.formalParameterList().formalParameter().stream()
+          .map(DeclarationFactory::fromContext)
+          .collect(Collectors.toList());
+    }
+
+    return new ArrayList<>();
   }
 
   private static void setPosition(Ref ref, ParserRuleContext ctx) {
