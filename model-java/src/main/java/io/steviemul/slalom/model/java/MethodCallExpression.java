@@ -1,6 +1,7 @@
 package io.steviemul.slalom.model.java;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -13,6 +14,7 @@ import java.util.List;
 @Setter
 @Accessors(fluent = true)
 @ToString
+@EqualsAndHashCode(callSuper = false)
 public class MethodCallExpression extends Expression {
   private IdentifierExpression method;
   private List<Expression> parameters = new ArrayList<>();

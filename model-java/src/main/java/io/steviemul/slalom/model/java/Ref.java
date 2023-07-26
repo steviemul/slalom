@@ -1,6 +1,7 @@
 package io.steviemul.slalom.model.java;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -11,6 +12,7 @@ import org.antlr.v4.runtime.ParserRuleContext;
 @Setter
 @Accessors(fluent = true)
 @ToString
+@EqualsAndHashCode(callSuper = false)
 public abstract class Ref {
   private int line;
   private int column;
