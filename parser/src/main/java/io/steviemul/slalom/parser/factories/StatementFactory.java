@@ -5,12 +5,13 @@ import io.steviemul.slalom.model.java.BlockStatement;
 import io.steviemul.slalom.model.java.StatementExpression;
 import io.steviemul.slalom.model.java.IfStatement;
 import io.steviemul.slalom.model.java.LocalVariableDeclarationStatement;
-import io.steviemul.slalom.model.java.MethodCallExpression;
 import io.steviemul.slalom.model.java.ReturnStatement;
 import io.steviemul.slalom.model.java.Statement;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.stream.Collectors;
 
+@Slf4j
 public class StatementFactory {
 
   public static BlockStatement fromContext(JavaParser.BlockContext ctx) {
@@ -68,6 +69,7 @@ public class StatementFactory {
         blockStatement.statements().add(fromContext(blockStatementContext));
       }
 
+      blockStatement.position(ctx);
       return blockStatement;
     } else if (ctx.IF() != null) {
       IfStatement ifStatement = new IfStatement();
@@ -79,16 +81,20 @@ public class StatementFactory {
         ifStatement.elseStatement(fromContext(ctx.statement(1)));
       }
 
+      ifStatement.position(ctx);
       return ifStatement;
     } else if (ctx.RETURN() != null) {
       ReturnStatement returnStatement = new ReturnStatement();
 
       returnStatement.expression(ExpressionFactory.fromContext(ctx.expression(0)));
 
+      returnStatement.position(ctx);
       return returnStatement;
     } else if (ctx.statementExpression != null) {
       return fromContext(ctx.statementExpression);
     }
+
+    log.warn("Found unhandled statement [{}]", ctx.getText());
 
     return statement;
   }

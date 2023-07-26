@@ -110,7 +110,9 @@ public class DeclarationFactory {
         ctx.variableDeclarators().variableDeclarator().stream()
             .map(DeclarationFactory::fromContext)
             .collect(Collectors.toList()));
-    ;
+
+    fieldDeclaration.position(ctx);
+
     return fieldDeclaration;
   }
 
@@ -126,6 +128,8 @@ public class DeclarationFactory {
     if (isDefined(ctx.methodBody().block())) {
       methodDeclaration.block(StatementFactory.fromContext(ctx.methodBody().block()));
     }
+
+    methodDeclaration.position(ctx);
 
     return methodDeclaration;
   }
@@ -149,6 +153,8 @@ public class DeclarationFactory {
           ExpressionFactory.fromContext(ctx.variableInitializer().expression()));
     }
 
+    variableDeclaration.position(ctx);
+
     return variableDeclaration;
   }
 
@@ -158,6 +164,8 @@ public class DeclarationFactory {
 
     variableDeclaration.name(ctx.variableDeclaratorId().identifier().getText());
     variableDeclaration.type(ctx.typeType().getText());
+
+    variableDeclaration.position(ctx);
 
     return variableDeclaration;
   }
@@ -173,6 +181,8 @@ public class DeclarationFactory {
     if (isDefined(ctx.block())) {
       constructorDeclaration.block(StatementFactory.fromContext(ctx.block()));
     }
+
+    constructorDeclaration.position(ctx);
 
     return constructorDeclaration;
   }
