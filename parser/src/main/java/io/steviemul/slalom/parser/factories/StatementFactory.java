@@ -7,6 +7,7 @@ import io.steviemul.slalom.model.java.IfStatement;
 import io.steviemul.slalom.model.java.LocalVariableDeclarationStatement;
 import io.steviemul.slalom.model.java.MethodCallStatement;
 import io.steviemul.slalom.model.java.Operator;
+import io.steviemul.slalom.model.java.ReturnStatement;
 import io.steviemul.slalom.model.java.Statement;
 
 import java.util.stream.Collectors;
@@ -19,8 +20,10 @@ public class StatementFactory {
 
     BlockStatement blockStatement = new BlockStatement();
 
-    blockStatement.statements(ctx.blockStatement().stream()
-        .map(StatementFactory::fromContext).collect(Collectors.toList()));
+    blockStatement.statements(
+        ctx.blockStatement().stream()
+            .map(StatementFactory::fromContext)
+            .collect(Collectors.toList()));
 
     blockStatement.position(ctx.start.getLine(), ctx.start.getCharPositionInLine());
 
@@ -33,8 +36,7 @@ public class StatementFactory {
 
     if (ctx.localVariableDeclaration() != null) {
       statement = fromContext(ctx.localVariableDeclaration());
-    }
-    else if (ctx.statement() != null) {
+    } else if (ctx.statement() != null) {
       statement = fromContext(ctx.statement());
     }
 
@@ -43,8 +45,10 @@ public class StatementFactory {
     return statement;
   }
 
-  public static LocalVariableDeclarationStatement fromContext(JavaParser.LocalVariableDeclarationContext ctx) {
-    LocalVariableDeclarationStatement localVariableDeclarationStatement = new LocalVariableDeclarationStatement();
+  public static LocalVariableDeclarationStatement fromContext(
+      JavaParser.LocalVariableDeclarationContext ctx) {
+    LocalVariableDeclarationStatement localVariableDeclarationStatement =
+        new LocalVariableDeclarationStatement();
 
     localVariableDeclarationStatement.type(ctx.typeType().getText());
 
@@ -68,8 +72,7 @@ public class StatementFactory {
       }
 
       return blockStatement;
-    }
-    else if (ctx.IF() != null) {
+    } else if (ctx.IF() != null) {
       IfStatement ifStatement = new IfStatement();
 
       ifStatement.expression(ExpressionFactory.fromContext(ctx.parExpression()));
@@ -80,8 +83,13 @@ public class StatementFactory {
       }
 
       return ifStatement;
-    }
-    else if (ctx.statementExpression != null) {
+    } else if (ctx.RETURN() != null) {
+      ReturnStatement returnStatement = new ReturnStatement();
+
+      returnStatement.expression(ExpressionFactory.fromContext(ctx.expression(0)));
+
+      return returnStatement;
+    } else if (ctx.statementExpression != null) {
       return fromContext(ctx.statementExpression);
     }
 
@@ -99,8 +107,8 @@ public class StatementFactory {
       expressionStatement.operator(Operator.fromToken(ctx.bop.getText()));
     }
 
-    expressionStatement.expressions(ctx.expression().stream()
-        .map(ExpressionFactory::fromContext).collect(Collectors.toList()));
+    expressionStatement.expressions(
+        ctx.expression().stream().map(ExpressionFactory::fromContext).collect(Collectors.toList()));
 
     return expressionStatement;
   }
@@ -109,8 +117,10 @@ public class StatementFactory {
     MethodCallStatement methodCallStatement = new MethodCallStatement();
 
     methodCallStatement.method(ExpressionFactory.fromContext(ctx.identifier()));
-    methodCallStatement.parameters(ctx.expressionList().expression()
-        .stream().map(ExpressionFactory::fromContext).collect(Collectors.toList()));
+    methodCallStatement.parameters(
+        ctx.expressionList().expression().stream()
+            .map(ExpressionFactory::fromContext)
+            .collect(Collectors.toList()));
 
     return methodCallStatement;
   }

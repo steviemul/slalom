@@ -15,5 +15,6 @@ import java.util.List;
 public class Expression extends Ref {
   private Expression expression;
   private Operator operator;
+  private boolean inArray;
   private List<Expression> expressions = new ArrayList<>();
 }

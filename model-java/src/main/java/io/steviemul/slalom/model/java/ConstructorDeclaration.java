@@ -9,6 +9,4 @@ import lombok.experimental.Accessors;
 @Setter
 @Accessors(fluent = true)
 @ToString
-public class ConstructorDeclaration extends MethodDeclaration {
-
-}
+public class ConstructorDeclaration extends MethodDeclaration {}

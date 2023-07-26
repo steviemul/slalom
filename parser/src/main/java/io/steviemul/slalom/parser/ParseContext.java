@@ -44,11 +44,11 @@ public class ParseContext {
   public <T> T requireType(Class<T> expectedType) {
     try {
       return expectedType.cast(context.peek());
-    }
-    catch (ClassCastException e) {
-      String msg = String.format("Context Type Mismatch [%s, %s]",
-          expectedType.getName(),
-          context.peek().getClass().getName());
+    } catch (ClassCastException e) {
+      String msg =
+          String.format(
+              "Context Type Mismatch [%s, %s]",
+              expectedType.getName(), context.peek().getClass().getName());
 
       log.error("Illegal State. Context is [{}]", currentState());
 
@@ -59,15 +59,14 @@ public class ParseContext {
   public <T> Optional<T> requestType(Class<T> expectedType) {
     try {
       return Optional.of(expectedType.cast(context.peek()));
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       return Optional.empty();
     }
   }
 
   private String currentState() {
 
-    return  "Context - \n" + context.stream().map(Ref::toString)
-        .collect(Collectors.joining("\n -->"));
+    return "Context - \n"
+        + context.stream().map(Ref::toString).collect(Collectors.joining("\n -->"));
   }
 }

@@ -1,17 +1,17 @@
 package io.steviemul.slalom.parser.factories;
 
+import static io.steviemul.slalom.utils.ObjectUtils.isDefined;
+import static io.steviemul.slalom.utils.ParseTreeUtils.inArray;
+
 import io.steviemul.slalom.antlr.JavaParser;
 import io.steviemul.slalom.model.java.CreatorExpression;
 import io.steviemul.slalom.model.java.Expression;
 import io.steviemul.slalom.model.java.IdentifierExpression;
 import io.steviemul.slalom.model.java.LiteralExpression;
 import io.steviemul.slalom.model.java.Operator;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static io.steviemul.slalom.utils.ObjectUtils.isDefined;
 
 public class ExpressionFactory {
 
@@ -29,11 +29,9 @@ public class ExpressionFactory {
 
     if (ctx.primary() != null) {
       expression = fromContext(ctx.primary());
-    }
-    else if (ctx.identifier() != null) {
+    } else if (ctx.identifier() != null) {
       expression = fromContext(ctx.identifier());
-    }
-    else if (ctx.creator() != null) {
+    } else if (ctx.creator() != null) {
       expression = fromContext(ctx.creator());
     }
 
@@ -41,11 +39,14 @@ public class ExpressionFactory {
       if (ctx.bop != null) {
         expression.operator(Operator.fromToken(ctx.bop.getText()));
       }
-      expression.expressions(ctx.expression().stream()
-          .map(ExpressionFactory::fromContext).collect(Collectors.toList()));
+      expression.expressions(
+          ctx.expression().stream()
+              .map(ExpressionFactory::fromContext)
+              .collect(Collectors.toList()));
     }
 
     expression.position(ctx.start.getLine(), ctx.start.getCharPositionInLine());
+    expression.inArray(inArray(ctx));
 
     return expression;
   }
@@ -56,7 +57,7 @@ public class ExpressionFactory {
     creatorExpression.type(fromContext(ctx.createdName().identifier(0)));
 
     if (isDefined(ctx.classCreatorRest())) {
-      creatorExpression.expressions(fromContext(ctx.classCreatorRest().arguments()));
+      creatorExpression.parameters(fromContext(ctx.classCreatorRest().arguments()));
     }
 
     return creatorExpression;
@@ -65,8 +66,8 @@ public class ExpressionFactory {
   public static List<Expression> fromContext(JavaParser.ArgumentsContext ctx) {
 
     if (ctx.expressionList() != null && ctx.expressionList().expression() != null) {
-      return ctx.expressionList().expression()
-          .stream().map(ExpressionFactory::fromContext)
+      return ctx.expressionList().expression().stream()
+          .map(ExpressionFactory::fromContext)
           .collect(Collectors.toList());
     }
 
@@ -79,8 +80,7 @@ public class ExpressionFactory {
 
     if (ctx.literal() != null) {
       expression = fromContext(ctx.literal());
-    }
-    else if (ctx.identifier() != null) {
+    } else if (ctx.identifier() != null) {
       expression = fromContext(ctx.identifier());
     }
 

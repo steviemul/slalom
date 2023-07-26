@@ -13,6 +13,7 @@ import java.util.List;
 @Accessors(fluent = true)
 @ToString
 public class CompilationUnit extends Ref {
+  private String path;
   private PackageDeclaration packageDeclaration;
   private List<ImportDeclaration> importDeclarations = new ArrayList<>();
   private Declaration typeDeclaration;

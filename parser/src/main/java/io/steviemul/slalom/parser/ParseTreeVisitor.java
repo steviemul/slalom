@@ -19,8 +19,8 @@ public class ParseTreeVisitor extends JavaParserBaseVisitor<CompilationUnit> {
       compilationUnit.packageDeclaration(packageDeclaration(ctx.packageDeclaration()));
     }
 
-    ctx.importDeclaration().forEach(i ->
-        compilationUnit.importDeclarations().add(importDeclaration(i)));
+    ctx.importDeclaration()
+        .forEach(i -> compilationUnit.importDeclarations().add(importDeclaration(i)));
 
     if (ctx.typeDeclaration(0) != null) {
       compilationUnit.typeDeclaration(declarationFactory.fromContext(ctx.typeDeclaration(0)));
@@ -30,8 +30,7 @@ public class ParseTreeVisitor extends JavaParserBaseVisitor<CompilationUnit> {
   }
 
   private PackageDeclaration packageDeclaration(JavaParser.PackageDeclarationContext ctx) {
-    return new PackageDeclaration()
-        .name(ctx.qualifiedName().getText());
+    return new PackageDeclaration().name(ctx.qualifiedName().getText());
   }
 
   public ImportDeclaration importDeclaration(JavaParser.ImportDeclarationContext ctx) {

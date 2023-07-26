@@ -1,6 +1,5 @@
 package io.steviemul.slalom.model.java;
 
-
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
