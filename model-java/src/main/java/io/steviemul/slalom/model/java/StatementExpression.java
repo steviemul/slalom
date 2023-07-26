@@ -5,10 +5,13 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 @Accessors(fluent = true)
 @ToString
-public class IdentifierExpression extends Expression {
-  private String name;
+public class StatementExpression extends Statement {
+  private Expression expression;
 }

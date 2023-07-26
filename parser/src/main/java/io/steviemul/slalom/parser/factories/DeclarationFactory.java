@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.antlr.v4.runtime.ParserRuleContext;
 
-import static io.steviemul.slalom.constants.TypeConstants.VOID;
+import static io.steviemul.slalom.constants.ParserConstants.VOID;
 import static io.steviemul.slalom.utils.ObjectUtils.isDefined;
 
 public class DeclarationFactory {

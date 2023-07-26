@@ -2,17 +2,14 @@ package io.steviemul.slalom.parser.factories;
 
 import io.steviemul.slalom.antlr.JavaParser;
 import io.steviemul.slalom.model.java.BlockStatement;
-import io.steviemul.slalom.model.java.ExpressionStatement;
+import io.steviemul.slalom.model.java.StatementExpression;
 import io.steviemul.slalom.model.java.IfStatement;
 import io.steviemul.slalom.model.java.LocalVariableDeclarationStatement;
-import io.steviemul.slalom.model.java.MethodCallStatement;
-import io.steviemul.slalom.model.java.Operator;
+import io.steviemul.slalom.model.java.MethodCallExpression;
 import io.steviemul.slalom.model.java.ReturnStatement;
 import io.steviemul.slalom.model.java.Statement;
 
 import java.util.stream.Collectors;
-
-import static io.steviemul.slalom.utils.ObjectUtils.isDefined;
 
 public class StatementFactory {
 
@@ -96,32 +93,11 @@ public class StatementFactory {
     return statement;
   }
 
-  public static ExpressionStatement fromContext(JavaParser.ExpressionContext ctx) {
-    ExpressionStatement expressionStatement = new ExpressionStatement();
+  public static StatementExpression fromContext(JavaParser.ExpressionContext ctx) {
+    StatementExpression statementExpression = new StatementExpression();
 
-    if (isDefined(ctx.methodCall())) {
-      expressionStatement = fromContext(ctx.methodCall());
-    }
+    statementExpression.expression(ExpressionFactory.fromContext(ctx));
 
-    if (ctx.bop != null) {
-      expressionStatement.operator(Operator.fromToken(ctx.bop.getText()));
-    }
-
-    expressionStatement.expressions(
-        ctx.expression().stream().map(ExpressionFactory::fromContext).collect(Collectors.toList()));
-
-    return expressionStatement;
-  }
-
-  public static MethodCallStatement fromContext(JavaParser.MethodCallContext ctx) {
-    MethodCallStatement methodCallStatement = new MethodCallStatement();
-
-    methodCallStatement.method(ExpressionFactory.fromContext(ctx.identifier()));
-    methodCallStatement.parameters(
-        ctx.expressionList().expression().stream()
-            .map(ExpressionFactory::fromContext)
-            .collect(Collectors.toList()));
-
-    return methodCallStatement;
+    return statementExpression;
   }
 }

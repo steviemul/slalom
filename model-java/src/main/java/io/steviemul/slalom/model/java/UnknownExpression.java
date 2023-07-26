@@ -1,6 +1,7 @@
 package io.steviemul.slalom.model.java;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
@@ -9,6 +10,7 @@ import lombok.experimental.Accessors;
 @Setter
 @Accessors(fluent = true)
 @ToString
-public class IdentifierExpression extends Expression {
-  private String name;
+@RequiredArgsConstructor
+public class UnknownExpression extends Expression {
+  private final String text;
 }

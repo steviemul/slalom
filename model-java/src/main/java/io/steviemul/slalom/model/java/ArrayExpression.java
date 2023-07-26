@@ -9,6 +9,7 @@ import lombok.experimental.Accessors;
 @Setter
 @Accessors(fluent = true)
 @ToString
-public class IdentifierExpression extends Expression {
-  private String name;
+public class ArrayExpression extends Expression {
+  private Expression identifier;
+  private Expression index;
 }

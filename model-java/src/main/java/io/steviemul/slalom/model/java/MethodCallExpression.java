@@ -12,7 +12,7 @@ import java.util.List;
 @Setter
 @Accessors(fluent = true)
 @ToString
-public class MethodCallStatement extends ExpressionStatement {
+public class MethodCallExpression extends Expression {
   private IdentifierExpression method;
   private List<Expression> parameters = new ArrayList<>();
 }

@@ -7,20 +7,20 @@ import io.steviemul.slalom.model.java.ConstructorDeclaration;
 import io.steviemul.slalom.model.java.CreatorExpression;
 import io.steviemul.slalom.model.java.Declaration;
 import io.steviemul.slalom.model.java.Expression;
-import io.steviemul.slalom.model.java.ExpressionStatement;
+import io.steviemul.slalom.model.java.StatementExpression;
 import io.steviemul.slalom.model.java.FieldDeclaration;
 import io.steviemul.slalom.model.java.IdentifierExpression;
 import io.steviemul.slalom.model.java.IfStatement;
 import io.steviemul.slalom.model.java.LiteralExpression;
 import io.steviemul.slalom.model.java.LocalVariableDeclarationStatement;
-import io.steviemul.slalom.model.java.MethodCallStatement;
+import io.steviemul.slalom.model.java.MethodCallExpression;
 import io.steviemul.slalom.model.java.MethodDeclaration;
+import io.steviemul.slalom.model.java.ParExpression;
 import io.steviemul.slalom.model.java.ReturnStatement;
 import io.steviemul.slalom.model.java.Statement;
 import io.steviemul.slalom.model.java.StaticBlockDeclaration;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 
 import io.steviemul.slalom.model.java.VariableDeclaration;
 import lombok.RequiredArgsConstructor;
@@ -132,10 +132,8 @@ public class PseudoCodePrinter {
 
   private void printStatement(Statement statement) {
 
-    if (statement instanceof MethodCallStatement) {
-      printStatement((MethodCallStatement) statement);
-    } else if (statement instanceof ExpressionStatement) {
-      printStatement((ExpressionStatement) statement);
+    if (statement instanceof StatementExpression) {
+      printStatement((StatementExpression) statement);
     } else if (statement instanceof IfStatement) {
       printStatement((IfStatement) statement);
     } else if (statement instanceof LocalVariableDeclarationStatement) {
@@ -152,19 +150,9 @@ public class PseudoCodePrinter {
     printExpression(statement.expression());
   }
 
-  private void printStatement(ExpressionStatement statement) {
-    statement.expressions().forEach(this::printExpression);
+  private void printStatement(StatementExpression statement) {}
 
-    if (statement.operator() != null) {
-      print(" ", statement.operator(), " ");
-    }
-
-    if (statement instanceof MethodCallStatement) {
-      printStatement((MethodCallStatement) statement);
-    }
-  }
-
-  private void printStatement(MethodCallStatement statement) {
+  private void printStatement(MethodCallExpression statement) {
     printExpression(statement.method());
     print("( ");
     statement.parameters().forEach(this::printExpression);
@@ -208,19 +196,9 @@ public class PseudoCodePrinter {
   }
 
   private void printExpression(Expression expression) {
-    if (expression.expression() != null) {
-      printExpression(expression.expression());
-      print(" ");
-    }
-
-    if (expression.expressions() != null) {
-      expression.expressions().forEach(this::printExpression);
-      if (expression.operator() != null) {
-        print(expression.operator());
-      }
-    }
-
-    if (expression instanceof IdentifierExpression) {
+    if (expression instanceof ParExpression) {
+      printExpression(((ParExpression) expression).expression());
+    } else if (expression instanceof IdentifierExpression) {
       printExpression(((IdentifierExpression) expression));
     } else if (expression instanceof LiteralExpression) {
       printExpression((LiteralExpression) expression);
