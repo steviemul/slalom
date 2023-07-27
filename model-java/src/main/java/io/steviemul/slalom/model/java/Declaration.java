@@ -13,14 +13,8 @@ import lombok.experimental.Accessors;
 @ToString
 @EqualsAndHashCode(callSuper = false)
 public class Declaration extends ModifiableRef {
-  public static final String UNKNOWN = "UNKNOWN";
-
   private String name;
   private String path;
   private String fqn;
   private String type;
-
-  public Declaration() {
-    this.name(UNKNOWN);
-  }
 }

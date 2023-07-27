@@ -9,8 +9,6 @@ import io.steviemul.slalom.parser.factories.DeclarationFactory;
 
 public class ParseTreeVisitor extends JavaParserBaseVisitor<ASTRoot> {
 
-  private final DeclarationFactory declarationFactory = new DeclarationFactory();
-
   @Override
   public ASTRoot visitCompilationUnit(JavaParser.CompilationUnitContext ctx) {
     ASTRoot ASTRoot = new ASTRoot();
@@ -22,7 +20,7 @@ public class ParseTreeVisitor extends JavaParserBaseVisitor<ASTRoot> {
     ctx.importDeclaration().forEach(i -> ASTRoot.importDeclarations().add(importDeclaration(i)));
 
     if (ctx.typeDeclaration(0) != null) {
-      ASTRoot.typeDeclaration(declarationFactory.fromContext(ctx.typeDeclaration(0)));
+      ASTRoot.typeDeclaration(DeclarationFactory.fromContext(ctx.typeDeclaration(0)));
     }
 
     return ASTRoot;
@@ -33,9 +31,14 @@ public class ParseTreeVisitor extends JavaParserBaseVisitor<ASTRoot> {
   }
 
   public ImportDeclaration importDeclaration(JavaParser.ImportDeclarationContext ctx) {
-    return new ImportDeclaration()
-        .wildcard(ctx.MUL() != null)
-        .staticImport(ctx.STATIC() != null)
-        .name(ctx.qualifiedName().getText());
+    ImportDeclaration importDeclaration =
+        new ImportDeclaration()
+            .wildcard(ctx.MUL() != null)
+            .staticImport(ctx.STATIC() != null)
+            .name(ctx.qualifiedName().getText());
+
+    importDeclaration.position(ctx);
+
+    return importDeclaration;
   }
 }

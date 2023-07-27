@@ -25,5 +25,8 @@ public class LangClasses {
           "Short",
           "String",
           "StringBuilder",
-          "StringBuffer");
+          "StringBuffer",
+          "System",
+          "Thread",
+          "ThreadLocal");
 }

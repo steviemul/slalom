@@ -1,6 +1,6 @@
 package io.steviemul.slalom.example;
 
-import java.security.MessageDigest;
+import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -18,7 +18,7 @@ public final class Sample extends SampleParent implements SampleInterface1, Samp
 
   private static String DB_USERNAME = "username";
   private static final String DB_PASSWORD = "password";
-  private MessageDigest md = null;
+  private java.security.MessageDigest md = null;
 
   static {
     String username = "username";
@@ -33,12 +33,12 @@ public final class Sample extends SampleParent implements SampleInterface1, Samp
   private InnerSample innerSample = new InnerSample();
 
   public String getName() {
-    return name;
+    return this.name;
   }
 
   public Sample(String name) throws Exception {
     this.name = name;
-    md = MessageDigest.getInstance("MD5");
+    md = java.security.MessageDigest.getInstance("MD5");
   }
 
   public List<String> getLines() {
@@ -90,9 +90,11 @@ public final class Sample extends SampleParent implements SampleInterface1, Samp
   public static void output(String[] args) throws Exception {
     int index = 0;
 
+    java.io.OutputStream out = System.out;
+
     Sample sample = new Sample(args[index]);
 
-    System.out.println(sample);
+    out.write(sample.toString().getBytes(StandardCharsets.UTF_8));
   }
 
   static class InnerSample {

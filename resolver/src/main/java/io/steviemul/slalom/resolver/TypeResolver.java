@@ -1,18 +1,10 @@
 package io.steviemul.slalom.resolver;
 
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.TreeMap;
-import java.util.stream.Collectors;
-
 import io.steviemul.slalom.model.java.ASTRoot;
 import io.steviemul.slalom.model.java.ImportDeclaration;
+import io.steviemul.slalom.model.java.MethodDeclaration;
+import io.steviemul.slalom.model.java.VariableDeclaration;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.bcel.Repository;
 import org.apache.bcel.classfile.ClassParser;
@@ -22,10 +14,16 @@ import org.apache.bcel.generic.Type;
 import org.reflections.Reflections;
 import org.reflections.scanners.SubTypesScanner;
 
+import java.io.InputStream;
+import java.util.*;
+import java.util.stream.Collectors;
+
 @Slf4j
+@Getter
 public class TypeResolver {
 
-  private static final Map<String, List<MethodDefinition>> typeDefinitions = new TreeMap<>();
+  @Getter
+  private static final Map<String, List<MethodDeclaration>> typeDefinitions = new TreeMap<>();
 
   public static void resolveTypes(ASTRoot ASTRoot) {
 
@@ -47,34 +45,38 @@ public class TypeResolver {
     log.info("Resolved types, took {}ms", new Date().getTime() - start.getTime());
   }
 
-  public static Map<String, List<MethodDefinition>> getTypeDefinitions() {
-    return typeDefinitions;
-  }
-
   private static void readMethods(JavaClass javaClass) {
 
-    List<MethodDefinition> methodDefinitions = new ArrayList<>();
+    List<MethodDeclaration> methodDeclarations = Arrays.stream(javaClass.getMethods())
+        .map(TypeResolver::fromMethod).collect(Collectors.toList());
 
-    for (Method method : javaClass.getMethods()) {
+    typeDefinitions.putIfAbsent(javaClass.getClassName(), methodDeclarations);
+  }
 
-      if (method.isPublic()) {
-        MethodDefinition methodDefinition =
-            MethodDefinition.builder()
-                .name(method.getName())
-                .returnType(method.getReturnType().getClassName())
-                .argumentTypes(
-                    Arrays.stream(method.getArgumentTypes())
-                        .map(Type::getClassName)
-                        .collect(Collectors.toList()))
-                .build();
+  private static MethodDeclaration fromMethod(Method method) {
+    MethodDeclaration methodDeclaration = new MethodDeclaration();
 
-        methodDefinitions.sort(Comparator.comparing(MethodDefinition::getName));
+    if (method.isPublic()) methodDeclaration.modifiers().add("public");
+    if (method.isPrivate()) methodDeclaration.modifiers().add("private");
+    if (method.isStatic()) methodDeclaration.modifiers().add("static");
+    if (method.isFinal()) methodDeclaration.modifiers().add("final");
 
-        methodDefinitions.add(methodDefinition);
-      }
-    }
+    methodDeclaration.name(method.getName());
+    methodDeclaration.type(method.getReturnType().getClassName());
+    methodDeclaration.parameters(
+        Arrays.stream(method.getArgumentTypes()).map(
+            TypeResolver::fromType
+        ).collect(Collectors.toList()));
 
-    typeDefinitions.putIfAbsent(javaClass.getClassName(), methodDefinitions);
+    return methodDeclaration;
+  }
+
+  private static VariableDeclaration fromType(Type type) {
+    VariableDeclaration variableDeclaration = new VariableDeclaration();
+
+    variableDeclaration.type(type.getClassName());
+
+    return variableDeclaration;
   }
 
   private static Optional<JavaClass> lookupClass(String className) {

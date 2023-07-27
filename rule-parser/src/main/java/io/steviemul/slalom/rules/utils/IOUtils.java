@@ -1,4 +1,4 @@
-package io.steviemul.slalom.utils;
+package io.steviemul.slalom.rules.utils;
 
 import java.io.IOException;
 import java.io.OutputStream;

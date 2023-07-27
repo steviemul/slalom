@@ -1,23 +1,25 @@
 package io.steviemul.slalom.parser.factories;
 
+import static io.steviemul.slalom.constants.ParserConstants.VOID;
+import static io.steviemul.slalom.utils.ObjectUtils.isDefined;
+
 import io.steviemul.slalom.antlr.JavaParser;
+import io.steviemul.slalom.model.java.AnnotationDeclaration;
+import io.steviemul.slalom.model.java.AnnotationElement;
 import io.steviemul.slalom.model.java.ClassDeclaration;
 import io.steviemul.slalom.model.java.ConstructorDeclaration;
 import io.steviemul.slalom.model.java.Declaration;
 import io.steviemul.slalom.model.java.FieldDeclaration;
+import io.steviemul.slalom.model.java.InterfaceDeclaration;
 import io.steviemul.slalom.model.java.MethodDeclaration;
 import io.steviemul.slalom.model.java.ModifiableRef;
 import io.steviemul.slalom.model.java.Ref;
 import io.steviemul.slalom.model.java.StaticBlockDeclaration;
 import io.steviemul.slalom.model.java.VariableDeclaration;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.antlr.v4.runtime.ParserRuleContext;
-
-import static io.steviemul.slalom.constants.ParserConstants.VOID;
-import static io.steviemul.slalom.utils.ObjectUtils.isDefined;
 
 public class DeclarationFactory {
 
@@ -27,12 +29,27 @@ public class DeclarationFactory {
 
     if (ctx.classDeclaration() != null) {
       declaration = fromContext(ctx.classDeclaration());
+    } else if (ctx.interfaceDeclaration() != null) {
+      declaration = fromContext(ctx.interfaceDeclaration());
     }
 
     setPosition(declaration, ctx);
     setModifiers(declaration, ctx.classOrInterfaceModifier());
 
     return declaration;
+  }
+
+  public static Declaration fromContext(JavaParser.InterfaceDeclarationContext ctx) {
+    InterfaceDeclaration interfaceDeclaration = new InterfaceDeclaration();
+    interfaceDeclaration.name(ctx.identifier().getText());
+
+    if (ctx.EXTENDS() != null) {
+      interfaceDeclaration.parents(fromContext(ctx.typeList()));
+    }
+
+    interfaceDeclaration.memberDeclarations(fromContext(ctx.interfaceBody()));
+
+    return interfaceDeclaration;
   }
 
   public static Declaration fromContext(JavaParser.ClassBodyDeclarationContext ctx) {
@@ -84,36 +101,48 @@ public class DeclarationFactory {
     }
 
     if (isDefined(ctx.IMPLEMENTS())) {
-      List<String> interfaces =
-          ctx.typeList().stream()
-              .flatMap(tl -> tl.typeType().stream())
-              .map(JavaParser.TypeTypeContext::getText)
-              .collect(Collectors.toList());
-
-      classDeclaration.interfaces(interfaces);
+      classDeclaration.interfaces(fromContext(ctx.typeList()));
     }
 
     if (isDefined(ctx.classBody())) {
-      classDeclaration.memberDeclarations(
-          ctx.classBody().classBodyDeclaration().stream()
-              .map(DeclarationFactory::fromContext)
-              .collect(Collectors.toList()));
+      classDeclaration.memberDeclarations(fromContext(ctx.classBody()));
     }
+
     return classDeclaration;
+  }
+
+  public static List<String> fromContext(List<JavaParser.TypeListContext> ctx) {
+    return ctx.stream()
+        .flatMap(tl -> tl.typeType().stream())
+        .map(JavaParser.TypeTypeContext::getText)
+        .collect(Collectors.toList());
+  }
+
+  public static List<Declaration> fromContext(JavaParser.ClassBodyContext ctx) {
+    return ctx.classBodyDeclaration().stream()
+        .map(DeclarationFactory::fromContext)
+        .collect(Collectors.toList());
+  }
+
+  public static List<Declaration> fromContext(JavaParser.InterfaceBodyContext ctx) {
+    return null;
   }
 
   public static FieldDeclaration fromContext(JavaParser.FieldDeclarationContext ctx) {
     FieldDeclaration fieldDeclaration = new FieldDeclaration();
 
     fieldDeclaration.type(ctx.typeType().getText());
-    fieldDeclaration.variableDeclarations(
-        ctx.variableDeclarators().variableDeclarator().stream()
-            .map(DeclarationFactory::fromContext)
-            .collect(Collectors.toList()));
+    fieldDeclaration.variableDeclarations(fromContext(ctx.variableDeclarators()));
 
     fieldDeclaration.position(ctx);
 
     return fieldDeclaration;
+  }
+
+  public static List<VariableDeclaration> fromContext(JavaParser.VariableDeclaratorsContext ctx) {
+    return ctx.variableDeclarator().stream()
+        .map(DeclarationFactory::fromContext)
+        .collect(Collectors.toList());
   }
 
   public static MethodDeclaration fromContext(JavaParser.MethodDeclarationContext ctx) {
@@ -198,6 +227,35 @@ public class DeclarationFactory {
     return new ArrayList<>();
   }
 
+  public static AnnotationDeclaration fromContext(JavaParser.AnnotationContext ctx) {
+    AnnotationDeclaration declaration = new AnnotationDeclaration();
+
+    declaration.name(ctx.qualifiedName().getText());
+
+    if (ctx.elementValue() != null) {
+      declaration.value(ExpressionFactory.fromContext(ctx.elementValue().expression()));
+    }
+
+    if (ctx.elementValuePairs() != null && ctx.elementValuePairs().elementValuePair() != null) {
+      declaration.elements(
+          ctx.elementValuePairs().elementValuePair().stream()
+              .map(DeclarationFactory::fromContext)
+              .collect(Collectors.toList()));
+    }
+
+    return declaration;
+  }
+
+  public static AnnotationElement fromContext(JavaParser.ElementValuePairContext ctx) {
+    AnnotationElement element = new AnnotationElement();
+
+    element.position(ctx);
+    element.identifier(ExpressionFactory.fromContext(ctx.identifier()));
+    element.value(ExpressionFactory.fromContext(ctx.elementValue().expression()));
+
+    return element;
+  }
+
   private static void setPosition(Ref ref, ParserRuleContext ctx) {
     ref.position(ctx.start.getLine(), ctx.start.getCharPositionInLine());
   }
@@ -207,7 +265,11 @@ public class DeclarationFactory {
       List<JavaParser.ClassOrInterfaceModifierContext> modifierContexts) {
 
     for (JavaParser.ClassOrInterfaceModifierContext modifierContext : modifierContexts) {
-      modifiableRef.modifiers().add(modifierContext.getText());
+      if (modifierContext.annotation() != null) {
+        modifiableRef.annotations().add(fromContext(modifierContext.annotation()));
+      } else {
+        modifiableRef.modifiers().add(modifierContext.getText());
+      }
     }
   }
 }

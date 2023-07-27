@@ -28,19 +28,17 @@ public class Main {
 
       Date start = new Date();
 
-      ASTRoot ASTRoot = parser.parse(source);
+      ASTRoot astRoot = parser.parse(source);
 
-      ASTRoot.path(path);
+      astRoot.path(path);
 
       log.info("Parsed [{}], took {}ms", path, new Date().getTime() - start.getTime());
 
-      TypeResolver.resolveTypes(ASTRoot);
+      TypeResolver.resolveTypes(astRoot);
 
-      String astOutput = ASTRootSerializer.toJson(ASTRoot);
+      String yamlOutput = ASTRootSerializer.toYAML(astRoot);
 
-      ASTRoot readAstRoot = ASTRootSerializer.fromJsonString(astOutput);
-
-      System.out.println(astOutput);
+      System.out.println(yamlOutput);
     } catch (Exception e) {
       log.error("Error parsing source", e);
     }
