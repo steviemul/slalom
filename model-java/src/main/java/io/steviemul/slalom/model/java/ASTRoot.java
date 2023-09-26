@@ -1,6 +1,7 @@
 package io.steviemul.slalom.model.java;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.steviemul.slalom.model.java.visitor.RefVisitor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,4 +21,9 @@ public class ASTRoot extends Ref {
   private PackageDeclaration packageDeclaration;
   private List<ImportDeclaration> importDeclarations = new ArrayList<>();
   private Declaration typeDeclaration;
+
+  @Override
+  public void accept(RefVisitor visitor) {
+    visitor.visitASTRoot(this);
+  }
 }

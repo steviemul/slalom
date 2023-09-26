@@ -1,6 +1,7 @@
 package io.steviemul.slalom.model.java;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.steviemul.slalom.model.java.visitor.RefVisitor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,4 +26,6 @@ public abstract class Ref {
     this.line = line;
     this.column = column;
   }
+
+  public abstract void accept(RefVisitor visitor);
 }

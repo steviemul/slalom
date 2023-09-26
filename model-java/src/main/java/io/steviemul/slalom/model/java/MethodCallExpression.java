@@ -1,6 +1,7 @@
 package io.steviemul.slalom.model.java;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.steviemul.slalom.model.java.visitor.RefVisitor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,4 +19,9 @@ import java.util.List;
 public class MethodCallExpression extends Expression {
   private IdentifierExpression method;
   private List<Expression> parameters = new ArrayList<>();
+
+  @Override
+  public void accept(RefVisitor visitor) {
+    visitor.visitMethodCallExpression(this);
+  }
 }

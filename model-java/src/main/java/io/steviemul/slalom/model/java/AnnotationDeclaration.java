@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.steviemul.slalom.model.java.visitor.RefVisitor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,4 +21,9 @@ import lombok.experimental.Accessors;
 public class AnnotationDeclaration extends Declaration {
   private Expression value;
   private List<AnnotationElement> elements = new ArrayList<>();
+
+  @Override
+  public void accept(RefVisitor visitor) {
+    visitor.visitAnnotationDeclaration(this);
+  }
 }

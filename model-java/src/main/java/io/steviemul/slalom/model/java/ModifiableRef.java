@@ -17,7 +17,7 @@ import lombok.experimental.Accessors;
 @Accessors(fluent = true)
 @ToString
 @EqualsAndHashCode(callSuper = false)
-public class ModifiableRef extends Ref {
+public abstract class ModifiableRef extends Ref {
   private Set<String> modifiers = new LinkedHashSet<>();
   private List<AnnotationDeclaration> annotations = new ArrayList<>();
 }

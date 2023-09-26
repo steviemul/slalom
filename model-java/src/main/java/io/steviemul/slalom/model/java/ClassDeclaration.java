@@ -1,6 +1,7 @@
 package io.steviemul.slalom.model.java;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.steviemul.slalom.model.java.visitor.RefVisitor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,4 +20,9 @@ public class ClassDeclaration extends Declaration {
   private List<Declaration> memberDeclarations = new ArrayList<>();
   private String parentClass;
   private List<String> interfaces = new ArrayList<>();
+
+  @Override
+  public void accept(RefVisitor visitor) {
+    visitor.visitClassDeclaration(this);
+  }
 }

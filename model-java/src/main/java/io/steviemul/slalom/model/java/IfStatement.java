@@ -1,6 +1,7 @@
 package io.steviemul.slalom.model.java;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.steviemul.slalom.model.java.visitor.RefVisitor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,4 +17,9 @@ public class IfStatement extends Statement {
   private Expression expression;
   private Statement thenStatement;
   private Statement elseStatement;
+
+  @Override
+  public void accept(RefVisitor visitor) {
+    visitor.visitIfStatement(this);
+  }
 }
