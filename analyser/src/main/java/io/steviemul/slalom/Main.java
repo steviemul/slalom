@@ -1,6 +1,5 @@
 package io.steviemul.slalom;
 
-import io.steviemul.slalom.analyser.PseudoCodePrinter;
 import io.steviemul.slalom.gui.Visualizer;
 import io.steviemul.slalom.model.java.ASTRoot;
 import io.steviemul.slalom.parser.Parser;
@@ -34,7 +33,7 @@ public class Main {
 
       log.info("Parsed [{}], took {}ms", path, new Date().getTime() - start.getTime());
 
-      TypeResolver.resolveTypes(astRoot);
+      TypeResolver.addCompilationUnit(astRoot);
 
       String yamlOutput = ASTRootSerializer.toYAML(astRoot);
 

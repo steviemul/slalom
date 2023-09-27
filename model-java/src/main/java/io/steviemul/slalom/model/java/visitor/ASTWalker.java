@@ -136,9 +136,9 @@ public class ASTWalker {
   private void accept(IfStatement ifStatement) {
     ifStatement.accept(visitor);
 
+    Optional.ofNullable(ifStatement.expression()).ifPresent(this::accept);
     Optional.ofNullable(ifStatement.thenStatement()).ifPresent(this::accept);
     Optional.ofNullable(ifStatement.elseStatement()).ifPresent(this::accept);
-    Optional.ofNullable(ifStatement.expression()).ifPresent(this::accept);
   }
 
   private void accept(LocalVariableDeclarationStatement localVariableDeclarationStatement) {

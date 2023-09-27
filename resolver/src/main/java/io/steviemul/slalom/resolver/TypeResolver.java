@@ -1,9 +1,11 @@
 package io.steviemul.slalom.resolver;
 
 import io.steviemul.slalom.model.java.ASTRoot;
+import io.steviemul.slalom.model.java.Declaration;
 import io.steviemul.slalom.model.java.ImportDeclaration;
 import io.steviemul.slalom.model.java.MethodDeclaration;
 import io.steviemul.slalom.model.java.VariableDeclaration;
+import io.steviemul.slalom.model.java.visitor.AbstractRefVisitor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.bcel.Repository;
@@ -15,51 +17,82 @@ import org.reflections.Reflections;
 import org.reflections.scanners.SubTypesScanner;
 
 import java.io.InputStream;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 @Slf4j
 @Getter
-public class TypeResolver {
+public class TypeResolver extends AbstractRefVisitor {
 
-  @Getter
+  private static final Map<String, Declaration> classes = new TreeMap<>();
   private static final Map<String, List<MethodDeclaration>> typeDefinitions = new TreeMap<>();
 
-  public static void resolveTypes(ASTRoot ASTRoot) {
+  static {
+    initClasses();
+  }
+
+  public static void addCompilationUnit(ASTRoot astRoot) {
 
     Date start = new Date();
 
-    for (ImportDeclaration importDeclaration : ASTRoot.importDeclarations()) {
+    String fqn = astRoot.packageDeclaration().name() +
+        "." + astRoot.typeDeclaration().name();
+
+    classes.put(fqn, astRoot.typeDeclaration());
+
+    for (ImportDeclaration importDeclaration : astRoot.importDeclarations()) {
 
       if (!importDeclaration.wildcard()) {
-        lookupClass(importDeclaration.name()).ifPresent(TypeResolver::readMethods);
+        lookupClass(importDeclaration.name()).ifPresent(TypeResolver::addClassDeclaration);
       } else {
-        lookupClasses(importDeclaration.name()).forEach(TypeResolver::readMethods);
+        lookupClasses(importDeclaration.name()).forEach(TypeResolver::addClassDeclaration);
       }
-    }
-
-    for (String langClass : LangClasses.LANG_CLASSES) {
-      lookupClass("java.lang." + langClass).ifPresent(TypeResolver::readMethods);
     }
 
     log.info("Resolved types, took {}ms", new Date().getTime() - start.getTime());
   }
 
-  private static void readMethods(JavaClass javaClass) {
+  private static void initClasses() {
 
-    List<MethodDeclaration> methodDeclarations = Arrays.stream(javaClass.getMethods())
-        .map(TypeResolver::fromMethod).collect(Collectors.toList());
+    for (String langClass : LangClasses.LANG_CLASSES) {
+      String fqn = "java.lang." + langClass;
 
-    typeDefinitions.putIfAbsent(javaClass.getClassName(), methodDeclarations);
+      lookupClass(fqn).ifPresent(TypeResolver::addClassDeclaration);
+    }
+  }
+
+  private static void addClassDeclaration(JavaClass javaClass) {
+
+    ShadowClass shadowClass = new ShadowClass();
+
+    String fqn = javaClass.getClassName();
+
+    shadowClass.fqn(fqn);
+    shadowClass.name(getClassName(fqn));
+
+    Arrays.stream(javaClass.getMethods()).forEach(method -> {
+      shadowClass.memberDeclarations().add(fromMethod(method));
+    });
+
+    classes.put(fqn, shadowClass);
   }
 
   private static MethodDeclaration fromMethod(Method method) {
     MethodDeclaration methodDeclaration = new MethodDeclaration();
 
-    if (method.isPublic()) methodDeclaration.modifiers().add("public");
-    if (method.isPrivate()) methodDeclaration.modifiers().add("private");
-    if (method.isStatic()) methodDeclaration.modifiers().add("static");
-    if (method.isFinal()) methodDeclaration.modifiers().add("final");
+    if (method.isPublic())
+      methodDeclaration.modifiers().add("public");
+    if (method.isPrivate())
+      methodDeclaration.modifiers().add("private");
+    if (method.isStatic())
+      methodDeclaration.modifiers().add("static");
+    if (method.isFinal())
+      methodDeclaration.modifiers().add("final");
 
     methodDeclaration.name(method.getName());
     methodDeclaration.type(method.getReturnType().getClassName());
@@ -122,5 +155,16 @@ public class TypeResolver {
     } catch (Exception e) {
       return Optional.empty();
     }
+  }
+
+  private static String getClassName(String fqn) {
+
+    String[] parts = fqn.split("\\.");
+
+    if (parts.length > 0) {
+      return parts[parts.length - 1];
+    }
+
+    return fqn;
   }
 }
