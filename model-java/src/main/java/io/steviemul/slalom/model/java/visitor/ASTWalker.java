@@ -25,6 +25,7 @@ import io.steviemul.slalom.model.java.StatementExpression;
 import io.steviemul.slalom.model.java.StaticBlockDeclaration;
 import io.steviemul.slalom.model.java.UnknownExpression;
 import io.steviemul.slalom.model.java.VariableDeclaration;
+import io.steviemul.slalom.model.java.WhileStatement;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Optional;
@@ -65,6 +66,8 @@ public class ASTWalker {
       accept((BlockStatement) statement);
     } else if (statement instanceof IfStatement) {
       accept((IfStatement) statement);
+    } else if (statement instanceof WhileStatement) {
+      accept((WhileStatement) statement);
     } else if (statement instanceof LocalVariableDeclarationStatement) {
       accept((LocalVariableDeclarationStatement) statement);
     } else if (statement instanceof ReturnStatement) {
@@ -139,6 +142,13 @@ public class ASTWalker {
     Optional.ofNullable(ifStatement.expression()).ifPresent(this::accept);
     Optional.ofNullable(ifStatement.thenStatement()).ifPresent(this::accept);
     Optional.ofNullable(ifStatement.elseStatement()).ifPresent(this::accept);
+  }
+
+  private void accept(WhileStatement whileStatement) {
+    whileStatement.accept(visitor);
+
+    Optional.ofNullable(whileStatement.expression()).ifPresent(this::accept);
+    Optional.ofNullable(whileStatement.statement()).ifPresent(this::accept);
   }
 
   private void accept(LocalVariableDeclarationStatement localVariableDeclarationStatement) {

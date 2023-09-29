@@ -30,6 +30,7 @@ import io.steviemul.slalom.model.java.StatementExpression;
 import io.steviemul.slalom.model.java.StaticBlockDeclaration;
 import io.steviemul.slalom.model.java.UnknownExpression;
 import io.steviemul.slalom.model.java.VariableDeclaration;
+import io.steviemul.slalom.model.java.WhileStatement;
 
 public interface RefVisitor {
   void visitASTRoot(ASTRoot astRoot);
@@ -65,6 +66,8 @@ public interface RefVisitor {
   void visitIdentifierDeclaration(IdentifierExpression identifierExpression);
 
   void visitIfStatement(IfStatement ifStatement);
+
+  void visitWhileStatement(WhileStatement whileStatement);
 
   void visitInterfaceDeclaration(InterfaceDeclaration interfaceDeclaration);
 

@@ -30,9 +30,10 @@ import io.steviemul.slalom.model.java.StatementExpression;
 import io.steviemul.slalom.model.java.StaticBlockDeclaration;
 import io.steviemul.slalom.model.java.UnknownExpression;
 import io.steviemul.slalom.model.java.VariableDeclaration;
+import io.steviemul.slalom.model.java.WhileStatement;
 
 public class AbstractRefVisitor implements RefVisitor {
-  
+
   @Override
   public void visitASTRoot(ASTRoot astRoot) {
 
@@ -115,6 +116,11 @@ public class AbstractRefVisitor implements RefVisitor {
 
   @Override
   public void visitIfStatement(IfStatement ifStatement) {
+
+  }
+
+  @Override
+  public void visitWhileStatement(WhileStatement whileStatement) {
 
   }
 
