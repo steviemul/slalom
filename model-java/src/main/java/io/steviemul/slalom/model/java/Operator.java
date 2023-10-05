@@ -8,6 +8,7 @@ public enum Operator {
   DOT,
   EQUAL,
   GREATER,
+  LESS,
   MINUS,
   MOD,
   MUL,
@@ -29,6 +30,8 @@ public enum Operator {
         return EQUAL;
       case ">":
         return GREATER;
+      case "<":
+        return LESS;
       case "-":
         return MINUS;
       case "%":

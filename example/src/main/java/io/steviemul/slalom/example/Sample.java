@@ -87,6 +87,24 @@ public final class Sample extends SampleParent implements SampleInterface1, Samp
     System.out.println(details);
   }
 
+  private void printNameWhile() {
+
+    int i = 0;
+
+    while (i < this.name.length()) {
+      char c = this.name.charAt(i);
+      System.out.print(i);
+      i = i + 1;
+    }
+  }
+
+  private void printNameFor() {
+
+    for (int i = 0; i < this.name.length(); i = i + 1) {
+      System.out.print(this.name.charAt(i));
+    }
+  }
+
   public static void output(String[] args) throws Exception {
     int index = 0;
 
