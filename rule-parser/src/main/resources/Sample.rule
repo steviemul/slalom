@@ -1,1 +1,0 @@
-Message.getInstance("MD5", TEST, 12);

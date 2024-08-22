@@ -1,0 +1,22 @@
+weak.crypto {
+  sink java.security.MessageDigest.getInstance(java.lang.String) {
+    arg(0) {
+      eq "MD5";
+    }
+  }
+}
+
+sql.injection {
+
+  meta {
+    "category" : "security";
+    "severity" : "critical";
+    "cwe" : "92";
+  }
+
+  sink java.sql.Statement.execute(java.lang.String) {
+    arg(0) {
+      tainted [!sql-encoded];
+    }
+  }
+}

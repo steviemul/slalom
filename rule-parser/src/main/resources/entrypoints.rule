@@ -1,0 +1,9 @@
+standard {
+  entry main(java.lang.String[]) {
+    access [public, static, void];
+  }
+}
+
+jersey.endpoints {
+  entry @javax.ws.rs.GET() {}
+}

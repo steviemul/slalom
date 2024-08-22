@@ -1,20 +1,34 @@
 package io.steviemul.slalom.rules;
 
-import io.steviemul.slalom.rules.model.Rule;
+import io.steviemul.slalom.rules.error.DefaultErrorListener;
+import io.steviemul.slalom.rules.model.RuleCollection;
+import lombok.RequiredArgsConstructor;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 
+import java.util.List;
+
+@RequiredArgsConstructor
 public class RuleInterpreter {
 
-  public Rule parse(String source) {
+  private final String sourceName;
 
-    RuleLexer ruleLexer = new RuleLexer(CharStreams.fromString(source));
+  public List<RuleCollection> parse(String source) {
+
+    RuleLexer ruleLexer = new RuleLexer(CharStreams.fromString(source, sourceName));
+
+    ruleLexer.removeErrorListeners();
+    ruleLexer.addErrorListener(new DefaultErrorListener());
+
     CommonTokenStream tokens = new CommonTokenStream(ruleLexer);
 
     RuleParser tokenParser = new RuleParser(tokens);
 
-    ParseTree parseTree = tokenParser.rule_();
+    tokenParser.removeErrorListeners();
+    tokenParser.addErrorListener(new DefaultErrorListener());
+
+    ParseTree parseTree = tokenParser.rules();
 
     RuleInterpreterVisitor parser = new RuleInterpreterVisitor();
 
