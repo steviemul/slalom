@@ -20,3 +20,16 @@ sql.injection {
     }
   }
 }
+
+hard.coded.credentials {
+
+  sink java.sql.DriverManager.getConnection(java.lang.String, java.lang.String, java.lang.String) {
+    arg(1) {
+      literal;
+    }
+
+    arg(2) {
+      literal;
+    }
+  }
+}

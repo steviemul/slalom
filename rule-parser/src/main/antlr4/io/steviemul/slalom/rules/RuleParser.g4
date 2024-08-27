@@ -55,7 +55,13 @@ sinkDefinition
 
 argDefinition
   : ARG LPAREN argIndex RPAREN
-    LBRACE (matchDefinition | expressionDefinition | taintedDefinition)+ RBRACE
+    LBRACE
+    (
+      matchDefinition
+      | expressionDefinition
+      | taintedDefinition
+      | literalDefinition
+    )+ RBRACE
   ;
 
 argIndex
@@ -71,7 +77,7 @@ expressionDefinition
   ;
 
 taintedDefinition
-  : TAINTED LBRACK taintConditionList RBRACK ';'
+  : TAINTED LBRACK taintConditionList RBRACK SEMI
   ;
 
 taintConditionList
@@ -80,6 +86,10 @@ taintConditionList
 
 taintCondition
   : EXCL? identifier
+  ;
+
+literalDefinition
+  : EXCL? LITERAL SEMI
   ;
 
 stringList

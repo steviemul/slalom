@@ -7,11 +7,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
+import org.apache.commons.codec.digest.DigestUtils;
 
 @Slf4j
 public class Parser {
 
   public ASTRoot parse(String source) {
+
+    String sha = DigestUtils.sha256Hex(source);
 
     JavaLexer lexer = new JavaLexer(CharStreams.fromString(source));
     CommonTokenStream tokens = new CommonTokenStream(lexer);
@@ -22,6 +25,7 @@ public class Parser {
 
     ParseTreeVisitor parser = new ParseTreeVisitor();
 
-    return parser.visit(parseTree);
+    return parser.visit(parseTree)
+        .sha(sha);
   }
 }

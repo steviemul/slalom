@@ -18,6 +18,7 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = false)
 public class ASTRoot extends Ref {
   private String path;
+  private String sha;
   private PackageDeclaration packageDeclaration;
   private List<ImportDeclaration> importDeclarations = new ArrayList<>();
   private Declaration typeDeclaration;

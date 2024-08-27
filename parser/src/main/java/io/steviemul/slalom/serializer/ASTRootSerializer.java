@@ -9,11 +9,15 @@ import io.steviemul.slalom.model.java.ASTRoot;
 
 public class ASTRootSerializer {
 
+  private static final String MODEL_JAVA = "io.steviemul.slalom.model.java";
+  private static final String ARRAY_LIST = "java.util.ArrayList";
+  private static final String LINKED_HASH_SET = "java.util.LinkedHashSet";
+
   private static final PolymorphicTypeValidator ptv =
       BasicPolymorphicTypeValidator.builder()
-          .allowIfSubType("io.steviemul.slalom.model.java")
-          .allowIfSubType("java.util.ArrayList")
-          .allowIfSubType("java.util.LinkedHashSet")
+          .allowIfSubType(MODEL_JAVA)
+          .allowIfSubType(ARRAY_LIST)
+          .allowIfSubType(LINKED_HASH_SET)
           .build();
 
   public static String toJson(ASTRoot astRoot) throws Exception {
@@ -22,6 +26,10 @@ public class ASTRootSerializer {
 
   public static ASTRoot fromJsonString(String astRootJsonString) throws Exception {
     return jsonMapper().readValue(astRootJsonString, ASTRoot.class);
+  }
+
+  public static ASTRoot fromJsonBytes(byte[] astRootJsonBytes) throws Exception {
+    return fromJsonString(new String(astRootJsonBytes));
   }
 
   public static String toYAML(ASTRoot astRoot) throws Exception {

@@ -2,8 +2,10 @@
 
 ## Modules
 
+- [Analyser](analyser)
 - [Java AST Model](model-java)
 - [Parser](parser)
 - [Resolver](resolver)
-- [Analyzer](analyser)
 - [Rule Parser](rule-parser)
+- [Slalom CLI](slalom-cli)
+- [Store](store)

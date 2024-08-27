@@ -9,6 +9,7 @@ ACCESS  : 'access';
 TAINTED : 'tainted';
 EQ      : 'eq';
 EXPR    : 'expr';
+LITERAL : 'literal';
 
 // Valid Tokens
 AT      : '@';

@@ -5,13 +5,18 @@ import io.steviemul.slalom.model.java.ASTRoot;
 import io.steviemul.slalom.parser.Parser;
 import io.steviemul.slalom.resolver.TypeResolver;
 import io.steviemul.slalom.serializer.ASTRootSerializer;
+import io.steviemul.slalom.store.Store;
 import io.steviemul.slalom.utils.IOUtils;
 import lombok.extern.slf4j.Slf4j;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
 @Slf4j
 public class Main {
+
+  private static final String SLALOM = "slalom";
+  private static final String AST_COLLECTION = "ast";
 
   public static void main(String[] args) {
 
@@ -35,9 +40,13 @@ public class Main {
 
       TypeResolver.addCompilationUnit(astRoot);
 
-      String yamlOutput = ASTRootSerializer.toYAML(astRoot);
+      Store astStore = new Store(SLALOM).start();
 
-      System.out.println(yamlOutput);
+      String astJson = ASTRootSerializer.toJson(astRoot);
+
+      astStore.save(AST_COLLECTION, astRoot.sha(), astJson.getBytes(StandardCharsets.UTF_8));
+
+
     } catch (Exception e) {
       log.error("Error parsing source", e);
     }
