@@ -52,7 +52,7 @@ public class Cli implements Callable<Integer> {
 
       Parser parser = new Parser();
 
-      ASTRoot astRoot = parser.parse(source);
+      ASTRoot astRoot = parser.parse(file.getAbsolutePath(), source);
 
       switch (format) {
         case FORMAT_JSON:

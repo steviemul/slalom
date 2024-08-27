@@ -2,6 +2,7 @@ package io.steviemul.slalom.parser.factories;
 
 import static io.steviemul.slalom.constants.ParserConstants.SUPER;
 import static io.steviemul.slalom.constants.ParserConstants.THIS;
+import static io.steviemul.slalom.utils.ContextUtils.logUnhandled;
 import static io.steviemul.slalom.utils.ObjectUtils.isDefined;
 
 import io.steviemul.slalom.antlr.JavaParser;
@@ -11,10 +12,12 @@ import io.steviemul.slalom.model.java.CreatorExpression;
 import io.steviemul.slalom.model.java.DotExpression;
 import io.steviemul.slalom.model.java.Expression;
 import io.steviemul.slalom.model.java.IdentifierExpression;
+import io.steviemul.slalom.model.java.LambdaExpression;
 import io.steviemul.slalom.model.java.LiteralExpression;
 import io.steviemul.slalom.model.java.MethodCallExpression;
 import io.steviemul.slalom.model.java.Operator;
 import io.steviemul.slalom.model.java.ParExpression;
+import io.steviemul.slalom.utils.CollectionUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
@@ -64,7 +67,7 @@ public class ExpressionFactory {
         }
     }
 
-    log.warn("Found unhandled expression [{}]", ctx.getText());
+    logUnhandled(ctx);
 
     return new Expression();
   }
@@ -91,13 +94,23 @@ public class ExpressionFactory {
       expression = fromContext(ctx.creator());
     } else if (isBinaryExpression(ctx)) {
       expression = fromContext(ctx, Operator.fromToken(ctx.bop.getText()));
+    } else if (ctx.lambdaExpression() != null) {
+      expression = fromContext(ctx.lambdaExpression());
     } else {
-      log.warn("Found unhandled expression [{}]", ctx.getText());
+      logUnhandled(ctx);
     }
 
     expression.position(ctx);
 
     return expression;
+  }
+
+  public static Expression fromContext(JavaParser.LambdaExpressionContext ctx) {
+    LambdaExpression lambdaExpression = new LambdaExpression();
+
+    logUnhandled(ctx);
+
+    return lambdaExpression;
   }
 
   public static Expression referenceExpressionFromContext(JavaParser.ExpressionContext ctx) {
@@ -126,7 +139,14 @@ public class ExpressionFactory {
   public static MethodCallExpression fromContext(JavaParser.MethodCallContext ctx) {
     MethodCallExpression methodCallExpression = new MethodCallExpression();
 
-    methodCallExpression.method(fromContext(ctx.identifier()));
+    if (ctx.identifier() != null) {
+      methodCallExpression.method(fromContext(ctx.identifier()));
+    } else if (ctx.THIS() != null) {
+      methodCallExpression.method(getSpecialMethod(ctx, ctx.THIS().getText()));
+    } else if (ctx.SUPER() != null) {
+      methodCallExpression.method(getSpecialMethod(ctx, ctx.SUPER().getText()));
+    }
+
     if (ctx.expressionList() != null) {
       methodCallExpression.parameters(
           ctx.expressionList().expression().stream()
@@ -141,7 +161,11 @@ public class ExpressionFactory {
   public static Expression fromContext(JavaParser.CreatorContext ctx) {
     CreatorExpression creatorExpression = new CreatorExpression();
 
-    creatorExpression.type(fromContext(ctx.createdName().identifier(0)));
+    if (CollectionUtils.hasLength(ctx.createdName().identifier())) {
+      creatorExpression.type(fromContext(ctx.createdName().identifier(0)));
+    } else {
+      logUnhandled(ctx);
+    }
 
     if (isDefined(ctx.classCreatorRest())) {
       creatorExpression.parameters(fromContext(ctx.classCreatorRest().arguments()));
@@ -211,5 +235,14 @@ public class ExpressionFactory {
 
   private static boolean isBinaryExpression(JavaParser.ExpressionContext ctx) {
     return ctx.bop != null && !ctx.bop.getText().equals(".") && ctx.expression().size() == 2;
+  }
+
+  private static IdentifierExpression getSpecialMethod(JavaParser.MethodCallContext ctx, String methodName) {
+    IdentifierExpression identifierExpression = new IdentifierExpression()
+        .name(methodName);
+
+    identifierExpression.position(ctx);
+
+    return identifierExpression;
   }
 }

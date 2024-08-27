@@ -8,6 +8,8 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
+import java.util.List;
+
 @Getter(onMethod = @__(@JsonProperty))
 @Setter
 @Accessors(fluent = true)
@@ -15,7 +17,7 @@ import lombok.experimental.Accessors;
 @EqualsAndHashCode(callSuper = false)
 public class AnnotationElement extends Declaration {
   private IdentifierExpression identifier;
-  private Expression value;
+  private List<Expression> values;
 
   @Override
   public void accept(RefVisitor visitor) {

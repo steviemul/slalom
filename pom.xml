@@ -17,6 +17,7 @@
         <module>rule-parser</module>
         <module>slalom-cli</module>
         <module>store</module>
+        <module>utils</module>
     </modules>
 
     <properties>

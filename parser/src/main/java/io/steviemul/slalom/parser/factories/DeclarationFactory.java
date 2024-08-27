@@ -1,6 +1,7 @@
 package io.steviemul.slalom.parser.factories;
 
 import static io.steviemul.slalom.constants.ParserConstants.VOID;
+import static io.steviemul.slalom.utils.ContextUtils.logUnhandled;
 import static io.steviemul.slalom.utils.ObjectUtils.isDefined;
 
 import io.steviemul.slalom.antlr.JavaParser;
@@ -9,6 +10,7 @@ import io.steviemul.slalom.model.java.AnnotationElement;
 import io.steviemul.slalom.model.java.ClassDeclaration;
 import io.steviemul.slalom.model.java.ConstructorDeclaration;
 import io.steviemul.slalom.model.java.Declaration;
+import io.steviemul.slalom.model.java.Expression;
 import io.steviemul.slalom.model.java.FieldDeclaration;
 import io.steviemul.slalom.model.java.InterfaceDeclaration;
 import io.steviemul.slalom.model.java.MethodDeclaration;
@@ -16,9 +18,11 @@ import io.steviemul.slalom.model.java.ModifiableRef;
 import io.steviemul.slalom.model.java.Ref;
 import io.steviemul.slalom.model.java.StaticBlockDeclaration;
 import io.steviemul.slalom.model.java.VariableDeclaration;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
 import org.antlr.v4.runtime.ParserRuleContext;
 
 public class DeclarationFactory {
@@ -34,7 +38,8 @@ public class DeclarationFactory {
     }
 
     setPosition(declaration, ctx);
-    setModifiers(declaration, ctx.classOrInterfaceModifier());
+
+    setClassOrInterfaceModifiers(declaration, ctx.classOrInterfaceModifier());
 
     return declaration;
   }
@@ -65,9 +70,7 @@ public class DeclarationFactory {
     if (ctx.modifier() != null) {
       setModifiers(
           declaration,
-          ctx.modifier().stream()
-              .map(JavaParser.ModifierContext::classOrInterfaceModifier)
-              .collect(Collectors.toList()));
+          ctx.modifier());
     }
 
     setPosition(declaration, ctx);
@@ -178,8 +181,13 @@ public class DeclarationFactory {
     variableDeclaration.name(ctx.variableDeclaratorId().identifier().getText());
 
     if (ctx.variableInitializer() != null) {
-      variableDeclaration.initialValue(
-          ExpressionFactory.fromContext(ctx.variableInitializer().expression()));
+      if (ctx.variableInitializer().expression() != null) {
+        variableDeclaration.initialValue(
+            ExpressionFactory.fromContext(ctx.variableInitializer().expression()));
+      } else {
+        logUnhandled(ctx);
+      }
+
     }
 
     variableDeclaration.position(ctx);
@@ -233,7 +241,7 @@ public class DeclarationFactory {
     declaration.name(ctx.qualifiedName().getText());
 
     if (ctx.elementValue() != null) {
-      declaration.value(ExpressionFactory.fromContext(ctx.elementValue().expression()));
+      declaration.values(getAnnotationElementValues(ctx.elementValue()));
     }
 
     if (ctx.elementValuePairs() != null && ctx.elementValuePairs().elementValuePair() != null) {
@@ -251,7 +259,19 @@ public class DeclarationFactory {
 
     element.position(ctx);
     element.identifier(ExpressionFactory.fromContext(ctx.identifier()));
-    element.value(ExpressionFactory.fromContext(ctx.elementValue().expression()));
+
+    element.values(getAnnotationElementValues(ctx.elementValue()));
+
+    if (ctx.elementValue().expression() != null) {
+      element.values(List.of(ExpressionFactory.fromContext(ctx.elementValue().expression())));
+    } else if (ctx.elementValue().elementValueArrayInitializer() != null) {
+      List<JavaParser.ExpressionContext> expressions = ctx.elementValue().elementValueArrayInitializer()
+          .elementValue().stream()
+          .map(JavaParser.ElementValueContext::expression)
+          .collect(Collectors.toList());
+
+      element.values(expressions.stream().map(ExpressionFactory::fromContext).toList());
+    }
 
     return element;
   }
@@ -262,14 +282,47 @@ public class DeclarationFactory {
 
   private static void setModifiers(
       ModifiableRef modifiableRef,
-      List<JavaParser.ClassOrInterfaceModifierContext> modifierContexts) {
+      List<JavaParser.ModifierContext> modifierContexts) {
 
-    for (JavaParser.ClassOrInterfaceModifierContext modifierContext : modifierContexts) {
-      if (modifierContext.annotation() != null) {
-        modifiableRef.annotations().add(fromContext(modifierContext.annotation()));
-      } else {
-        modifiableRef.modifiers().add(modifierContext.getText());
+    for (JavaParser.ModifierContext modifierContext : modifierContexts) {
+      if (modifierContext.classOrInterfaceModifier() != null) {
+        setClassOrInterfaceModifier(modifiableRef, modifierContext.classOrInterfaceModifier());
+      } else if (modifierContext.TRANSIENT() != null) {
+        modifiableRef.modifiers().add(modifierContext.TRANSIENT().getText());
+      } else if (modifierContext.SYNCHRONIZED() != null) {
+        modifiableRef.modifiers().add(modifierContext.SYNCHRONIZED().getText());
+      } else if (modifierContext.VOLATILE() != null) {
+        modifiableRef.modifiers().add(modifierContext.VOLATILE().getText());
       }
     }
+  }
+
+  private static void setClassOrInterfaceModifiers(ModifiableRef modifiableRef, List<JavaParser.ClassOrInterfaceModifierContext> modifiers) {
+    modifiers.forEach(m -> setClassOrInterfaceModifier(modifiableRef, m));
+  }
+
+  private static void setClassOrInterfaceModifier(ModifiableRef modifiableRef,
+                                                  JavaParser.ClassOrInterfaceModifierContext ctx) {
+    if (ctx.annotation() != null) {
+      modifiableRef.annotations().add(fromContext(ctx.annotation()));
+    } else {
+      modifiableRef.modifiers().add(ctx.getText());
+    }
+  }
+
+  private static List<Expression> getAnnotationElementValues(JavaParser.ElementValueContext ctx) {
+    List<Expression> expressions = new ArrayList<>();
+
+    if (ctx.expression() != null) {
+      expressions = List.of(ExpressionFactory.fromContext(ctx.expression()));
+    } else if (ctx.elementValueArrayInitializer() != null) {
+      expressions = ctx.elementValueArrayInitializer()
+          .elementValue().stream()
+          .map(JavaParser.ElementValueContext::expression)
+          .map(ExpressionFactory::fromContext)
+          .collect(Collectors.toList());
+    }
+
+    return expressions;
   }
 }

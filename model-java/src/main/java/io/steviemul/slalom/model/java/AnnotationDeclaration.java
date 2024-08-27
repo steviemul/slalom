@@ -19,7 +19,7 @@ import lombok.experimental.Accessors;
 @ToString
 @EqualsAndHashCode(callSuper = false)
 public class AnnotationDeclaration extends Declaration {
-  private Expression value;
+  private List<Expression> values;
   private List<AnnotationElement> elements = new ArrayList<>();
 
   @Override

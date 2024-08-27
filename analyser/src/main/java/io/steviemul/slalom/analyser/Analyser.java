@@ -4,6 +4,8 @@ import io.steviemul.slalom.model.java.ASTRoot;
 import io.steviemul.slalom.parser.Parser;
 import io.steviemul.slalom.serializer.ASTRootSerializer;
 import io.steviemul.slalom.store.Store;
+import io.steviemul.slalom.store.exception.StoreException;
+import io.steviemul.slalom.utils.HashUtils;
 import io.steviemul.slalom.utils.IOUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +36,14 @@ public class Analyser {
     } else if (file.isDirectory()) {
       analyseFolder(path);
     }
+
+    try {
+      int parsedFiles = store.count(AST_COLLECTION);
+
+      log.info("Total parsed files [{}]", parsedFiles);
+    } catch (StoreException e) {
+      log.error("Error counting parsed files", e);
+    }
   }
 
   public void analyseSingleFile(String path) {
@@ -44,7 +54,7 @@ public class Analyser {
     try {
       if (path.endsWith("." + JAVA)) {
         String source = IOUtils.readFile(path);
-        String sha = DigestUtils.sha256Hex(source);
+        String sha = HashUtils.sha(source);
 
         if (store.exists(AST_COLLECTION, sha)) {
           byte[] contents = store.getBlobContent(AST_COLLECTION, sha);
@@ -56,10 +66,14 @@ public class Analyser {
               astRoot.typeDeclaration().name());
 
         } else {
-          astRoot = parser.parse(source);
+          astRoot = parser.parse(path, source);
+
+          String packageName = astRoot.packageDeclaration() != null
+              ? astRoot.packageDeclaration().name()
+              : "UNKNOWN";
 
           log.info("AST Successfully parsed from source [{}, {}]",
-              astRoot.packageDeclaration().name(),
+              packageName,
               astRoot.typeDeclaration().name());
         }
 

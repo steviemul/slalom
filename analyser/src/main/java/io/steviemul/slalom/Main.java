@@ -32,7 +32,7 @@ public class Main {
 
       Date start = new Date();
 
-      ASTRoot astRoot = parser.parse(source);
+      ASTRoot astRoot = parser.parse(path, source);
 
       astRoot.path(path);
 

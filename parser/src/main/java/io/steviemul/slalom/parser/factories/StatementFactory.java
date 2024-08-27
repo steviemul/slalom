@@ -12,12 +12,17 @@ import io.steviemul.slalom.model.java.ReturnStatement;
 import io.steviemul.slalom.model.java.Statement;
 import io.steviemul.slalom.model.java.VariableDeclaration;
 import io.steviemul.slalom.model.java.WhileStatement;
+import io.steviemul.slalom.utils.CollectionUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.stream.Collectors;
 
+import static io.steviemul.slalom.utils.ContextUtils.logUnhandled;
+
 @Slf4j
 public class StatementFactory {
+
+  private static final String VAR_DECL = "VAR";
 
   public static BlockStatement fromContext(JavaParser.BlockContext ctx) {
 
@@ -53,12 +58,20 @@ public class StatementFactory {
     LocalVariableDeclarationStatement localVariableDeclarationStatement =
         new LocalVariableDeclarationStatement();
 
-    localVariableDeclarationStatement.type(ctx.typeType().getText());
+    if (ctx.VAR() != null) {
+      localVariableDeclarationStatement.type(VAR_DECL);
+    } else if (ctx.typeType() != null) {
+      localVariableDeclarationStatement.type(ctx.typeType().getText());
+    }
 
-    localVariableDeclarationStatement.variableDeclarations(
-        ctx.variableDeclarators().variableDeclarator().stream()
-            .map(DeclarationFactory::fromContext)
-            .collect(Collectors.toList()));
+    if (ctx.expression() != null) {
+      localVariableDeclarationStatement.initializer(ExpressionFactory.fromContext(ctx.expression()));
+    } else if (ctx.variableDeclarators() != null) {
+      localVariableDeclarationStatement.variableDeclarations(
+          ctx.variableDeclarators().variableDeclarator().stream()
+              .map(DeclarationFactory::fromContext)
+              .collect(Collectors.toList()));
+    }
 
     return localVariableDeclarationStatement;
   }
@@ -81,7 +94,7 @@ public class StatementFactory {
       return fromContext(ctx.statementExpression);
     }
 
-    log.warn("Found unhandled statement [{}]", ctx.getText());
+    logUnhandled(ctx);
 
     return statement;
   }
@@ -132,7 +145,9 @@ public class StatementFactory {
   public static ReturnStatement returnStatement(JavaParser.StatementContext ctx) {
     ReturnStatement returnStatement = new ReturnStatement();
 
-    returnStatement.expression(ExpressionFactory.fromContext(ctx.expression(0)));
+    if (CollectionUtils.hasLength(ctx.expression())) {
+      returnStatement.expression(ExpressionFactory.fromContext(ctx.expression(0)));
+    }
 
     returnStatement.position(ctx);
     return returnStatement;
@@ -152,8 +167,11 @@ public class StatementFactory {
   private static ForStatement standardForStatement(JavaParser.ForControlContext ctx) {
     StandardForStatement forStatement = new StandardForStatement();
 
-    forStatement.localVariableDeclaration(
-        StatementFactory.fromContext(ctx.forInit().localVariableDeclaration()));
+    if (ctx.forInit().localVariableDeclaration() != null) {
+      forStatement.localVariableDeclaration(
+          StatementFactory.fromContext(ctx.forInit().localVariableDeclaration()));
+    }
+
 
     if (ctx.forInit().expressionList() != null) {
       forStatement.initExpressions(

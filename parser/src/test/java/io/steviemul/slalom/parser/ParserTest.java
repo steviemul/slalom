@@ -22,7 +22,7 @@ public class ParserTest {
     String source = IOUtils.readFile(SOURCE_PATH);
 
     // When
-    ASTRoot expectedAstRoot = parser.parse(source);
+    ASTRoot expectedAstRoot = parser.parse(SOURCE_PATH, source);
 
     String expectedParsed = ASTRootSerializer.toJson(expectedAstRoot);
 
@@ -41,7 +41,7 @@ public class ParserTest {
     String source = IOUtils.readFile(SOURCE_PATH);
 
     // When
-    ASTRoot expectedAstRoot = parser.parse(source);
+    ASTRoot expectedAstRoot = parser.parse(SOURCE_PATH, source);
 
     String expectedParsed = ASTRootSerializer.toJson(expectedAstRoot);
 
@@ -62,7 +62,7 @@ public class ParserTest {
     String source = IOUtils.readFile(SOURCE_PATH);
 
     // When
-    ASTRoot expectedAstRoot = parser.parse(source);
+    ASTRoot expectedAstRoot = parser.parse(SOURCE_PATH, source);
 
     String expectedYamlParsed = ASTRootSerializer.toYAML(expectedAstRoot);
 
@@ -81,7 +81,7 @@ public class ParserTest {
     String source = IOUtils.readFile(SOURCE_PATH);
 
     // When
-    ASTRoot expectedAstRoot = parser.parse(source);
+    ASTRoot expectedAstRoot = parser.parse(SOURCE_PATH, source);
 
     String expectedYamlParsed = ASTRootSerializer.toYAML(expectedAstRoot);
 

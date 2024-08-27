@@ -1,7 +1,6 @@
 package io.steviemul.slalom.model.java;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.steviemul.slalom.model.java.visitor.RefVisitor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,13 +15,10 @@ import java.util.List;
 @Accessors(fluent = true)
 @ToString
 @EqualsAndHashCode(callSuper = false)
-public class LocalVariableDeclarationStatement extends Statement {
-  private String type;
-  private List<VariableDeclaration> variableDeclarations = new ArrayList<>();
-  private Expression initializer;
+public class LambdaExpression extends Expression {
 
-  @Override
-  public void accept(RefVisitor visitor) {
-    visitor.visitLocalVariableDeclarationStatement(this);
-  }
+  private IdentifierExpression identifier;
+  private List<Expression> parameters = new ArrayList<>();
+  private BlockStatement block = new BlockStatement();
+
 }

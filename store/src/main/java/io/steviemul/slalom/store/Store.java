@@ -4,9 +4,16 @@ import com.couchbase.lite.Blob;
 import com.couchbase.lite.Collection;
 import com.couchbase.lite.CouchbaseLite;
 import com.couchbase.lite.CouchbaseLiteException;
+import com.couchbase.lite.DataSource;
 import com.couchbase.lite.Database;
 import com.couchbase.lite.Document;
+import com.couchbase.lite.Expression;
+import com.couchbase.lite.Function;
 import com.couchbase.lite.MutableDocument;
+import com.couchbase.lite.Query;
+import com.couchbase.lite.QueryBuilder;
+import com.couchbase.lite.ResultSet;
+import com.couchbase.lite.SelectResult;
 import io.steviemul.slalom.store.exception.StoreException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +26,7 @@ public class Store {
 
   private static final String CONTENT = "content";
   private static final String CONTENT_TYPE_BINARY = "application/octet-stream";
+  private static final String COUNT = "count";
 
   private final String name;
 
@@ -52,6 +60,27 @@ public class Store {
       return db.createCollection(name);
     } catch (CouchbaseLiteException e) {
       throw new StoreException("Error creating collection", e);
+    }
+  }
+
+  public int count(String collectionName) throws StoreException {
+
+    try {
+      Collection collection = getCollection(collectionName);
+
+      Query countQuery = QueryBuilder.select(
+              SelectResult.expression(Function.count(Expression.string("*")))
+                  .as(COUNT))
+          .from(DataSource.collection(collection));
+
+      ResultSet results = countQuery.execute();
+
+      return results.allResults().stream()
+          .findFirst()
+          .map(r -> r.getInt(COUNT))
+          .orElse(0);
+    } catch (CouchbaseLiteException e) {
+      throw new StoreException("Error getting count", e);
     }
   }
 
