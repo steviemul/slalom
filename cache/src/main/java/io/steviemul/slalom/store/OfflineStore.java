@@ -13,6 +13,8 @@ import java.io.OutputStream;
 import java.util.LinkedHashMap;
 import java.util.UUID;
 
+import static io.steviemul.slalom.store.Utils.deleteDirectory;
+
 @Slf4j
 public class OfflineStore<K, V> implements Store<K, V> {
 
@@ -120,18 +122,4 @@ public class OfflineStore<K, V> implements Store<K, V> {
     }
   }
 
-  private void deleteDirectory(File directory) {
-
-    File[] children = directory.listFiles();
-
-    for (File child : children) {
-      if (child.isFile()) {
-        child.delete();
-      } else {
-        deleteDirectory(child);
-      }
-    }
-
-    directory.delete();
-  }
 }

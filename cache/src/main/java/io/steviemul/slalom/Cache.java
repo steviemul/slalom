@@ -1,10 +1,11 @@
 package io.steviemul.slalom;
 
-import io.steviemul.slalom.store.LRUStore;
 import io.steviemul.slalom.event.LRUMapListener;
-import io.steviemul.slalom.store.OfflineStore;
+import io.steviemul.slalom.store.KeyValueStore;
+import io.steviemul.slalom.store.LRUStore;
 import io.steviemul.slalom.store.NoopStore;
 import io.steviemul.slalom.store.Store;
+import io.steviemul.slalom.store.StoreException;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;
@@ -20,25 +21,25 @@ public class Cache<K, V> implements LRUMapListener<K, V>, Store<K, V> {
     backingStore = new NoopStore<>();
   }
 
-  public Cache(int maxMemoryObjects, String offlineLocation) {
+  public Cache(int maxMemoryObjects, String name) {
     memoryStore = new LRUStore<>(maxMemoryObjects);
     memoryStore.addEventListener(this);
 
     log.info("Memory store initialized with capacity [capacity={}]", maxMemoryObjects);
 
-    backingStore = new OfflineStore<>(offlineLocation);
+    backingStore = new KeyValueStore<>(name);
 
-    log.info("Backing store initialized with location [location={}]", offlineLocation);
+    log.info("Backing store initialized with name [name={}]", name);
   }
 
   @Override
-  public boolean contains(K key) {
+  public boolean contains(K key) throws StoreException {
     return memoryStore.containsKey(key)
         || backingStore.contains(key);
   }
 
   @Override
-  public V get(K key) {
+  public V get(K key) throws StoreException {
     if (memoryStore.containsKey(key)) {
       log.info("Memory store hit [key={}]", key);
 
@@ -62,20 +63,24 @@ public class Cache<K, V> implements LRUMapListener<K, V>, Store<K, V> {
   }
 
   @Override
-  public V remove(K key) {
+  public V remove(K key) throws StoreException {
     return memoryStore.remove(key);
   }
 
   @Override
-  public void clear() {
+  public void clear() throws StoreException {
     memoryStore.clear();
     backingStore.clear();
   }
 
   @Override
   public void objectEvicted(Map.Entry<K, V> entry) {
-    backingStore.put(entry.getKey(), entry.getValue());
+    try {
+      backingStore.put(entry.getKey(), entry.getValue());
 
-    log.info("Object evicted from memory store and persisted to backing store [key={}]", entry.getKey());
+      log.info("Object evicted from memory store and persisted to backing store [key={}]", entry.getKey());
+    } catch (StoreException e) {
+      log.error("Error persisting object to backing store", e);
+    }
   }
 }

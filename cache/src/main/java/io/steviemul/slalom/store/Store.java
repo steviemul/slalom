@@ -2,13 +2,13 @@ package io.steviemul.slalom.store;
 
 public interface Store<K, V> {
 
-  boolean contains(K key);
+  boolean contains(K key) throws StoreException;
 
-  V get(K key);
+  V get(K key) throws StoreException;
 
-  V put(K key, V value);
+  V put(K key, V value) throws StoreException;
 
-  V remove(K key);
+  V remove(K key) throws StoreException;
 
-  void clear();
+  void clear() throws StoreException;
 }

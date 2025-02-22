@@ -3,41 +3,53 @@ package io.steviemul.slalom;
 
 import org.junit.jupiter.api.Test;
 
+import java.io.Serializable;
+import java.util.Date;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class CacheTest {
 
-  private static final String OFFLINE_LOCATION = ".unit-tests-cache";
+  private static final String NAME = ".unit-tests";
 
   @Test
-  void test_basic_cache() {
+  void test_basic_cache() throws Exception {
 
-    int capacity = 1000;
+    long start = new Date().getTime();
 
-    Cache cache = new Cache(capacity, OFFLINE_LOCATION);
+    int capacity = 10000;
+
+    Cache<String, Person> cache = new Cache(capacity, NAME);
 
     for (int i = 0; i < capacity; i++) {
       String key = "key" + i;
-      String value = "value" + i;
+      Person person = new Person("firstName" + i, "surname" + i, i);
 
-      cache.put(key, value);
+      cache.put(key, person);
 
-      Object storedValue = cache.get(key);
+      Person storedValue = cache.get(key);
 
-      assertEquals(value, storedValue);
+      assertEquals(person, storedValue);
     }
 
     for (int i = capacity; i < (capacity * 2); i++) {
       String key = "key" + i;
-      String value = "value" + i;
+      Person person = new Person("firstName" + i, "surname" + i, i);
 
-      cache.put(key, value);
+      cache.put(key, person);
 
-      Object storedValue = cache.get(key);
+      Person storedValue = cache.get(key);
 
-      assertEquals(value, storedValue);
+      assertEquals(person, storedValue);
     }
 
     cache.clear();
+
+    long end = new Date().getTime();
+
+    System.out.println("Number of ms : " + (end - start));
+  }
+
+  record Person(String firstName, String surname, int age) implements Serializable {
   }
 }
