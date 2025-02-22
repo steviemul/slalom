@@ -16,8 +16,8 @@
         <module>example</module>
         <module>rule-parser</module>
         <module>slalom-cli</module>
-        <module>store</module>
         <module>utils</module>
+        <module>cache</module>
     </modules>
 
     <properties>

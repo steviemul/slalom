@@ -9,19 +9,10 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>store</artifactId>
-    <packaging>jar</packaging>
+    <artifactId>cache</artifactId>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
-    <dependencies>
-        <dependency>
-            <groupId>com.couchbase.lite</groupId>
-            <artifactId>couchbase-lite-java</artifactId>
-            <version>3.1.9</version>
-        </dependency>
-    </dependencies>
-    
 </project>

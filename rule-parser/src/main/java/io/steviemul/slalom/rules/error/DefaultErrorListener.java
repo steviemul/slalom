@@ -1,9 +1,11 @@
 package io.steviemul.slalom.rules.error;
 
+import lombok.extern.slf4j.Slf4j;
 import org.antlr.v4.runtime.BaseErrorListener;
 import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.Recognizer;
 
+@Slf4j
 public class DefaultErrorListener extends BaseErrorListener {
 
   @Override
@@ -20,6 +22,13 @@ public class DefaultErrorListener extends BaseErrorListener {
       sourceName = String.format("%s:%d:%d: ", sourceName, line, charPositionInLine);
     }
 
-    System.err.println(sourceName + "line " + line + ":" + charPositionInLine + " " + msg);
+    log.error("{} line {}:{} {}", sourceName, line, charPositionInLine, msg);
+
+    throw RuleParserException.builder()
+        .sourceName(sourceName)
+        .line(line)
+        .charPositionInLine(charPositionInLine)
+        .message(msg)
+        .build();
   }
 }

@@ -12,12 +12,14 @@ public class ASTRootSerializer {
   private static final String MODEL_JAVA = "io.steviemul.slalom.model.java";
   private static final String ARRAY_LIST = "java.util.ArrayList";
   private static final String LINKED_HASH_SET = "java.util.LinkedHashSet";
+  private static final String LIST12 = "java.util.ImmutableCollections$List12";
 
   private static final PolymorphicTypeValidator ptv =
       BasicPolymorphicTypeValidator.builder()
           .allowIfSubType(MODEL_JAVA)
           .allowIfSubType(ARRAY_LIST)
           .allowIfSubType(LINKED_HASH_SET)
+          .allowIfSubType(LIST12)
           .build();
 
   public static String toJson(ASTRoot astRoot) throws Exception {

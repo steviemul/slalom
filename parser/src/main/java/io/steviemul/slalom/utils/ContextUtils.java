@@ -12,7 +12,7 @@ public class ContextUtils {
 
   public static void logUnhandled(ParserRuleContext ctx) {
     ParserContext parserContext = ParserContext.currentContext();
-
+    
     log.warn("Found unhandled ParserRuleContext [{}, {}, {}, {}]",
         parserContext.getFilename(),
         ctx.getText(),

@@ -1,4 +1,4 @@
-standard {
+main {
   entry main(java.lang.String[]) {
     access [public, static, void];
   }

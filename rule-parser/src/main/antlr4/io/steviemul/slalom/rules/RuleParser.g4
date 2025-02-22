@@ -42,7 +42,7 @@ accessDeclaration
   ;
 
 sinkDeclaration
-  : SINK qualifiedName (LPAREN argList* RPAREN) sinkBody?
+  : SINK qualifiedName (LPAREN argList RPAREN) sinkBody?
   ;
 
 sinkBody
@@ -85,11 +85,15 @@ taintConditionList
   ;
 
 taintCondition
-  : EXCL? identifier
+  : not? identifier
   ;
 
 literalDefinition
-  : EXCL? LITERAL SEMI
+  : not? LITERAL SEMI
+  ;
+
+not
+  : EXCL
   ;
 
 stringList

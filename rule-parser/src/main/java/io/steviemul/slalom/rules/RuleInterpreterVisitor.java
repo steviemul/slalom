@@ -1,5 +1,7 @@
 package io.steviemul.slalom.rules;
 
+import com.fasterxml.jackson.core.io.doubleparser.JavaDoubleParser;
+import io.steviemul.slalom.rules.model.Argument;
 import io.steviemul.slalom.rules.model.EntryRule;
 import io.steviemul.slalom.rules.model.Rule;
 import io.steviemul.slalom.rules.model.RuleCollection;
@@ -43,10 +45,19 @@ public class RuleInterpreterVisitor extends RuleParserBaseVisitor<List<RuleColle
 
   public EntryRule entryRuleDefinition(RuleParser.EntryDeclarationContext ctx) {
 
-    return new EntryRule();
+    EntryRule entryRule = new EntryRule();
+
+    entryRule.name(ctx.qualifiedName().getText());
+    
+    return entryRule;
   }
 
   public SinkRule sinkRuleDefinition(RuleParser.SinkDeclarationContext ctx) {
+
     return new SinkRule();
+  }
+
+  private static Argument fromContext(RuleParser.ArgDefinitionContext ctx) {
+    return null;
   }
 }

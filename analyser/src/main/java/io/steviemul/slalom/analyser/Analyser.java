@@ -1,15 +1,13 @@
 package io.steviemul.slalom.analyser;
 
+import io.steviemul.slalom.Cache;
 import io.steviemul.slalom.model.java.ASTRoot;
 import io.steviemul.slalom.parser.Parser;
 import io.steviemul.slalom.serializer.ASTRootSerializer;
-import io.steviemul.slalom.store.Store;
-import io.steviemul.slalom.store.exception.StoreException;
 import io.steviemul.slalom.utils.HashUtils;
 import io.steviemul.slalom.utils.IOUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.codec.digest.DigestUtils;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
@@ -18,11 +16,10 @@ import java.nio.charset.StandardCharsets;
 @RequiredArgsConstructor
 public class Analyser {
 
-  private static final String SLALOM = "slalom";
   private static final String AST_COLLECTION = "ast";
   private static final String JAVA = "java";
 
-  private final Store store;
+  private final Cache<String, byte[]> cache;
 
   public void analyze(String path) {
     File file = new File(path);
@@ -36,14 +33,6 @@ public class Analyser {
     } else if (file.isDirectory()) {
       analyseFolder(path);
     }
-
-    try {
-      int parsedFiles = store.count(AST_COLLECTION);
-
-      log.info("Total parsed files [{}]", parsedFiles);
-    } catch (StoreException e) {
-      log.error("Error counting parsed files", e);
-    }
   }
 
   public void analyseSingleFile(String path) {
@@ -56,8 +45,8 @@ public class Analyser {
         String source = IOUtils.readFile(path);
         String sha = HashUtils.sha(source);
 
-        if (store.exists(AST_COLLECTION, sha)) {
-          byte[] contents = store.getBlobContent(AST_COLLECTION, sha);
+        if (cache.contains(sha)) {
+          byte[] contents = cache.get(sha);
 
           astRoot = ASTRootSerializer.fromJsonBytes(contents);
 
@@ -79,7 +68,7 @@ public class Analyser {
 
         String astJson = ASTRootSerializer.toJson(astRoot);
 
-        store.save(AST_COLLECTION, astRoot.sha(), astJson.getBytes(StandardCharsets.UTF_8));
+        cache.put(astRoot.sha(), astJson.getBytes(StandardCharsets.UTF_8));
       }
     } catch (Exception e) {
       log.error("Error parsing file [{}]", path, e);
@@ -109,12 +98,10 @@ public class Analyser {
   }
 
   public static void main(String args[]) throws Exception {
-    Store store = new Store(SLALOM).start();
+    Cache<String, byte[]> cache = new Cache<>(1000, ".ast-cache");
 
-    Analyser analyser = new Analyser(store);
+    Analyser analyser = new Analyser(cache);
 
     analyser.analyze(args[0]);
-
-    store.delete();
   }
 }

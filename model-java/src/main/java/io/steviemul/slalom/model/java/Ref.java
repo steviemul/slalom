@@ -2,18 +2,14 @@ package io.steviemul.slalom.model.java;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.steviemul.slalom.model.java.visitor.RefVisitor;
-import lombok.EqualsAndHashCode;
+import lombok.Data;
 import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
 import lombok.experimental.Accessors;
 import org.antlr.v4.runtime.ParserRuleContext;
 
 @Getter(onMethod = @__(@JsonProperty))
-@Setter
+@Data
 @Accessors(fluent = true)
-@ToString
-@EqualsAndHashCode(callSuper = false)
 public abstract class Ref {
   private int line;
   private int column;
