@@ -21,7 +21,7 @@ public class Cache<K, V> implements LRUMapListener<K, V>, Store<K, V> {
     this.memoryStore = new LRUStore<>();
     this.backingStore = new NoopStore<>();
   }
-  
+
   public Cache(int maxMemoryObjects, String name) {
     memoryStore = new LRUStore<>(maxMemoryObjects);
     memoryStore.addEventListener(this);
@@ -75,6 +75,7 @@ public class Cache<K, V> implements LRUMapListener<K, V>, Store<K, V> {
 
   @Override
   public void close() {
+    backingStore.close();
   }
 
   @Override

@@ -4,6 +4,7 @@ import static io.steviemul.slalom.store.Utils.base64StringToObject;
 import static io.steviemul.slalom.store.Utils.objectToBase64String;
 
 import io.steviemul.slalom.store.StoreException;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -16,7 +17,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -31,9 +34,10 @@ public class Index<K, V> {
 
   private final Map<K, V> index = new ConcurrentHashMap<>();
   private final Function<String, V> valueConverter;
+  private final Thread flushShutdownHook = new Thread(this::saveIndex);
 
   private final File indexFile;
-  private boolean dirty = false;
+  private AtomicBoolean dirty = new AtomicBoolean();
 
   public Index(File root, Function<String, V> valueConverter) throws StoreException {
     this.indexFile = new File(root, FILENAME);
@@ -54,7 +58,7 @@ public class Index<K, V> {
 
   public void put(K key, V value) {
     index.put(key, value);
-    dirty = true;
+    dirty.set(true);
   }
 
   public V remove(K key) {
@@ -79,13 +83,15 @@ public class Index<K, V> {
   }
 
   public void close() {
+    removeShutdownFlushHook();
     flushScheduler.shutdown();
   }
 
   @SuppressWarnings("unchecked")
   private void loadIndex() {
 
-    if (!indexFile.exists()) return;
+    if (!indexFile.exists())
+      return;
 
     int count = 0;
 
@@ -108,7 +114,8 @@ public class Index<K, V> {
 
   private void saveIndex() {
 
-    if (!dirty) return;
+    if (!dirty.get())
+      return;
 
     try (BufferedWriter writer = new BufferedWriter(new FileWriter(indexFile))) {
       int count = 0;
@@ -123,14 +130,18 @@ public class Index<K, V> {
       log.error("Error flushing index", e);
     }
 
-    dirty = false;
+    dirty.set(false);
   }
 
   private void startFlushScheduler() {
-    flushScheduler.scheduleAtFixedRate(this::saveIndex, 5, 5, TimeUnit.SECONDS);
+    flushScheduler.scheduleAtFixedRate(this::saveIndex, 1, 1, TimeUnit.SECONDS);
   }
 
   private void registerShutdownFlushHook() {
-    Runtime.getRuntime().addShutdownHook(new Thread(this::saveIndex));
+    Runtime.getRuntime().addShutdownHook(flushShutdownHook);
+  }
+
+  private void removeShutdownFlushHook() {
+    Runtime.getRuntime().removeShutdownHook(flushShutdownHook);
   }
 }
