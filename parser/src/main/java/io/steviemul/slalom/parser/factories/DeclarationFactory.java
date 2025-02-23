@@ -18,11 +18,9 @@ import io.steviemul.slalom.model.java.ModifiableRef;
 import io.steviemul.slalom.model.java.Ref;
 import io.steviemul.slalom.model.java.StaticBlockDeclaration;
 import io.steviemul.slalom.model.java.VariableDeclaration;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import org.antlr.v4.runtime.ParserRuleContext;
 
 public class DeclarationFactory {
@@ -68,9 +66,7 @@ public class DeclarationFactory {
     }
 
     if (ctx.modifier() != null) {
-      setModifiers(
-          declaration,
-          ctx.modifier());
+      setModifiers(declaration, ctx.modifier());
     }
 
     setPosition(declaration, ctx);
@@ -187,7 +183,6 @@ public class DeclarationFactory {
       } else {
         logUnhandled(ctx);
       }
-
     }
 
     variableDeclaration.position(ctx);
@@ -265,10 +260,10 @@ public class DeclarationFactory {
     if (ctx.elementValue().expression() != null) {
       element.values(List.of(ExpressionFactory.fromContext(ctx.elementValue().expression())));
     } else if (ctx.elementValue().elementValueArrayInitializer() != null) {
-      List<JavaParser.ExpressionContext> expressions = ctx.elementValue().elementValueArrayInitializer()
-          .elementValue().stream()
-          .map(JavaParser.ElementValueContext::expression)
-          .collect(Collectors.toList());
+      List<JavaParser.ExpressionContext> expressions =
+          ctx.elementValue().elementValueArrayInitializer().elementValue().stream()
+              .map(JavaParser.ElementValueContext::expression)
+              .collect(Collectors.toList());
 
       element.values(expressions.stream().map(ExpressionFactory::fromContext).toList());
     }
@@ -281,8 +276,7 @@ public class DeclarationFactory {
   }
 
   private static void setModifiers(
-      ModifiableRef modifiableRef,
-      List<JavaParser.ModifierContext> modifierContexts) {
+      ModifiableRef modifiableRef, List<JavaParser.ModifierContext> modifierContexts) {
 
     for (JavaParser.ModifierContext modifierContext : modifierContexts) {
       if (modifierContext.classOrInterfaceModifier() != null) {
@@ -297,12 +291,13 @@ public class DeclarationFactory {
     }
   }
 
-  private static void setClassOrInterfaceModifiers(ModifiableRef modifiableRef, List<JavaParser.ClassOrInterfaceModifierContext> modifiers) {
+  private static void setClassOrInterfaceModifiers(
+      ModifiableRef modifiableRef, List<JavaParser.ClassOrInterfaceModifierContext> modifiers) {
     modifiers.forEach(m -> setClassOrInterfaceModifier(modifiableRef, m));
   }
 
-  private static void setClassOrInterfaceModifier(ModifiableRef modifiableRef,
-                                                  JavaParser.ClassOrInterfaceModifierContext ctx) {
+  private static void setClassOrInterfaceModifier(
+      ModifiableRef modifiableRef, JavaParser.ClassOrInterfaceModifierContext ctx) {
     if (ctx.annotation() != null) {
       modifiableRef.annotations().add(fromContext(ctx.annotation()));
     } else {
@@ -316,11 +311,11 @@ public class DeclarationFactory {
     if (ctx.expression() != null) {
       expressions = List.of(ExpressionFactory.fromContext(ctx.expression()));
     } else if (ctx.elementValueArrayInitializer() != null) {
-      expressions = ctx.elementValueArrayInitializer()
-          .elementValue().stream()
-          .map(JavaParser.ElementValueContext::expression)
-          .map(ExpressionFactory::fromContext)
-          .collect(Collectors.toList());
+      expressions =
+          ctx.elementValueArrayInitializer().elementValue().stream()
+              .map(JavaParser.ElementValueContext::expression)
+              .map(ExpressionFactory::fromContext)
+              .collect(Collectors.toList());
     }
 
     return expressions;

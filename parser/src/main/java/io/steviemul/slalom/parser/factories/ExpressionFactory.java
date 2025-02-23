@@ -18,11 +18,10 @@ import io.steviemul.slalom.model.java.MethodCallExpression;
 import io.steviemul.slalom.model.java.Operator;
 import io.steviemul.slalom.model.java.ParExpression;
 import io.steviemul.slalom.utils.CollectionUtils;
-import lombok.extern.slf4j.Slf4j;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class ExpressionFactory {
@@ -237,9 +236,9 @@ public class ExpressionFactory {
     return ctx.bop != null && !ctx.bop.getText().equals(".") && ctx.expression().size() == 2;
   }
 
-  private static IdentifierExpression getSpecialMethod(JavaParser.MethodCallContext ctx, String methodName) {
-    IdentifierExpression identifierExpression = new IdentifierExpression()
-        .name(methodName);
+  private static IdentifierExpression getSpecialMethod(
+      JavaParser.MethodCallContext ctx, String methodName) {
+    IdentifierExpression identifierExpression = new IdentifierExpression().name(methodName);
 
     identifierExpression.position(ctx);
 

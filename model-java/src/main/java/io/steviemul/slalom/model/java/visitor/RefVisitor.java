@@ -73,7 +73,8 @@ public interface RefVisitor {
 
   void visitLiteralExpression(LiteralExpression literalExpression);
 
-  void visitLocalVariableDeclarationStatement(LocalVariableDeclarationStatement localVariableDeclarationStatement);
+  void visitLocalVariableDeclarationStatement(
+      LocalVariableDeclarationStatement localVariableDeclarationStatement);
 
   void visitMemberDeclaration(MemberDeclaration memberDeclaration);
 
@@ -94,5 +95,4 @@ public interface RefVisitor {
   void visitExpression(Expression expression);
 
   void visitStatement(Statement statement);
-
 }

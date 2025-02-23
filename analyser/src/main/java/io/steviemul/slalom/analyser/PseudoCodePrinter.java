@@ -7,7 +7,6 @@ import io.steviemul.slalom.model.java.ConstructorDeclaration;
 import io.steviemul.slalom.model.java.CreatorExpression;
 import io.steviemul.slalom.model.java.Declaration;
 import io.steviemul.slalom.model.java.Expression;
-import io.steviemul.slalom.model.java.StatementExpression;
 import io.steviemul.slalom.model.java.FieldDeclaration;
 import io.steviemul.slalom.model.java.IdentifierExpression;
 import io.steviemul.slalom.model.java.IfStatement;
@@ -18,11 +17,11 @@ import io.steviemul.slalom.model.java.MethodDeclaration;
 import io.steviemul.slalom.model.java.ParExpression;
 import io.steviemul.slalom.model.java.ReturnStatement;
 import io.steviemul.slalom.model.java.Statement;
+import io.steviemul.slalom.model.java.StatementExpression;
 import io.steviemul.slalom.model.java.StaticBlockDeclaration;
+import io.steviemul.slalom.model.java.VariableDeclaration;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
-
-import io.steviemul.slalom.model.java.VariableDeclaration;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor

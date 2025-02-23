@@ -7,5 +7,4 @@ public class CollectionUtils {
   public static boolean hasLength(Collection<?> collection) {
     return collection != null && collection.size() > 0;
   }
-
 }

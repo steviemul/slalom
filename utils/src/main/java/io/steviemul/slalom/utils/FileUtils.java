@@ -2,12 +2,10 @@ package io.steviemul.slalom.utils;
 
 import java.io.File;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
 public class FileUtils {
 
-  private FileUtils() {
-  }
+  private FileUtils() {}
 
   public static Path findModuleDirectory(String moduleParent, String moduleName) {
     return findModuleDirectory(new File("").getAbsoluteFile(), moduleParent, moduleName);
@@ -25,5 +23,4 @@ public class FileUtils {
 
     return findModuleDirectory(directory.getParentFile(), moduleParent, moduleName);
   }
-  
 }

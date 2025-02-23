@@ -1,11 +1,10 @@
 package io.steviemul.slalom.model.java;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.List;
 import lombok.Data;
 import lombok.Getter;
 import lombok.experimental.Accessors;
-
-import java.util.List;
 
 @Getter(onMethod = @__(@JsonProperty))
 @Data

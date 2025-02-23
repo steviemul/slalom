@@ -26,9 +26,8 @@ import io.steviemul.slalom.model.java.StaticBlockDeclaration;
 import io.steviemul.slalom.model.java.UnknownExpression;
 import io.steviemul.slalom.model.java.VariableDeclaration;
 import io.steviemul.slalom.model.java.WhileStatement;
-import lombok.RequiredArgsConstructor;
-
 import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class ASTWalker {

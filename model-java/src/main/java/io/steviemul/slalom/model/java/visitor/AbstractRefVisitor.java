@@ -35,157 +35,96 @@ import io.steviemul.slalom.model.java.WhileStatement;
 public class AbstractRefVisitor implements RefVisitor {
 
   @Override
-  public void visitASTRoot(ASTRoot astRoot) {
-
-  }
+  public void visitASTRoot(ASTRoot astRoot) {}
 
   @Override
-  public void visitDeclaration(Declaration declaration) {
-
-  }
+  public void visitDeclaration(Declaration declaration) {}
 
   @Override
-  public void visitCreatorExpression(CreatorExpression creatorExpression) {
-
-  }
+  public void visitCreatorExpression(CreatorExpression creatorExpression) {}
 
   @Override
-  public void visitMethodDeclaration(MethodDeclaration methodDeclaration) {
-
-  }
+  public void visitMethodDeclaration(MethodDeclaration methodDeclaration) {}
 
   @Override
-  public void visitImportDeclaration(ImportDeclaration importDeclaration) {
-
-  }
+  public void visitImportDeclaration(ImportDeclaration importDeclaration) {}
 
   @Override
-  public void visitPackageDeclaration(PackageDeclaration packageDeclaration) {
-
-  }
+  public void visitPackageDeclaration(PackageDeclaration packageDeclaration) {}
 
   @Override
-  public void visitAnnotationDeclaration(AnnotationDeclaration annotationDeclaration) {
-
-  }
+  public void visitAnnotationDeclaration(AnnotationDeclaration annotationDeclaration) {}
 
   @Override
-  public void visitAnnotationElement(AnnotationElement annotationElement) {
-
-  }
+  public void visitAnnotationElement(AnnotationElement annotationElement) {}
 
   @Override
-  public void visitArrayExpression(ArrayExpression arrayExpression) {
-
-  }
+  public void visitArrayExpression(ArrayExpression arrayExpression) {}
 
   @Override
-  public void visitBinaryExpression(BinaryExpression binaryExpression) {
-
-  }
+  public void visitBinaryExpression(BinaryExpression binaryExpression) {}
 
   @Override
-  public void visitBlockStatement(BlockStatement blockStatement) {
-
-  }
+  public void visitBlockStatement(BlockStatement blockStatement) {}
 
   @Override
-  public void visitClassDeclaration(ClassDeclaration classDeclaration) {
-
-  }
+  public void visitClassDeclaration(ClassDeclaration classDeclaration) {}
 
   @Override
-  public void visitConstructorDeclaration(ConstructorDeclaration constructorDeclaration) {
-
-  }
+  public void visitConstructorDeclaration(ConstructorDeclaration constructorDeclaration) {}
 
   @Override
-  public void visitDotExpression(DotExpression dotExpression) {
-
-  }
+  public void visitDotExpression(DotExpression dotExpression) {}
 
   @Override
-  public void visitFieldDeclaration(FieldDeclaration fieldDeclaration) {
-
-  }
+  public void visitFieldDeclaration(FieldDeclaration fieldDeclaration) {}
 
   @Override
-  public void visitIdentifierDeclaration(IdentifierExpression identifierExpression) {
-
-  }
+  public void visitIdentifierDeclaration(IdentifierExpression identifierExpression) {}
 
   @Override
-  public void visitIfStatement(IfStatement ifStatement) {
-
-  }
+  public void visitIfStatement(IfStatement ifStatement) {}
 
   @Override
-  public void visitWhileStatement(WhileStatement whileStatement) {
-
-  }
+  public void visitWhileStatement(WhileStatement whileStatement) {}
 
   @Override
-  public void visitInterfaceDeclaration(InterfaceDeclaration interfaceDeclaration) {
-
-  }
+  public void visitInterfaceDeclaration(InterfaceDeclaration interfaceDeclaration) {}
 
   @Override
-  public void visitLiteralExpression(LiteralExpression literalExpression) {
-
-  }
+  public void visitLiteralExpression(LiteralExpression literalExpression) {}
 
   @Override
-  public void visitLocalVariableDeclarationStatement(LocalVariableDeclarationStatement localVariableDeclarationStatement) {
-
-  }
-
-  @Override
-  public void visitMemberDeclaration(MemberDeclaration memberDeclaration) {
-
-  }
+  public void visitLocalVariableDeclarationStatement(
+      LocalVariableDeclarationStatement localVariableDeclarationStatement) {}
 
   @Override
-  public void visitMethodCallExpression(MethodCallExpression methodCallExpression) {
-
-  }
+  public void visitMemberDeclaration(MemberDeclaration memberDeclaration) {}
 
   @Override
-  public void visitParExpression(ParExpression parExpression) {
-
-  }
+  public void visitMethodCallExpression(MethodCallExpression methodCallExpression) {}
 
   @Override
-  public void visitReturnStatement(ReturnStatement returnStatement) {
-
-  }
+  public void visitParExpression(ParExpression parExpression) {}
 
   @Override
-  public void visitStatementExpression(StatementExpression statementExpression) {
-
-  }
+  public void visitReturnStatement(ReturnStatement returnStatement) {}
 
   @Override
-  public void visitStaticBlockDeclaration(StaticBlockDeclaration staticBlockDeclaration) {
-
-  }
+  public void visitStatementExpression(StatementExpression statementExpression) {}
 
   @Override
-  public void visitVariableDeclaration(VariableDeclaration variableDeclaration) {
-
-  }
+  public void visitStaticBlockDeclaration(StaticBlockDeclaration staticBlockDeclaration) {}
 
   @Override
-  public void visitUnknownExpression(UnknownExpression unknownExpression) {
-
-  }
+  public void visitVariableDeclaration(VariableDeclaration variableDeclaration) {}
 
   @Override
-  public void visitExpression(Expression expression) {
-
-  }
+  public void visitUnknownExpression(UnknownExpression unknownExpression) {}
 
   @Override
-  public void visitStatement(Statement statement) {
+  public void visitExpression(Expression expression) {}
 
-  }
+  @Override
+  public void visitStatement(Statement statement) {}
 }

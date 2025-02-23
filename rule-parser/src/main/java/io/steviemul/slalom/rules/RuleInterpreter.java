@@ -2,12 +2,11 @@ package io.steviemul.slalom.rules;
 
 import io.steviemul.slalom.rules.error.DefaultErrorListener;
 import io.steviemul.slalom.rules.model.RuleCollection;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
-
-import java.util.List;
 
 @RequiredArgsConstructor
 public class RuleInterpreter {

@@ -1,16 +1,14 @@
 package io.steviemul.slalom.rules;
 
-import com.fasterxml.jackson.core.io.doubleparser.JavaDoubleParser;
 import io.steviemul.slalom.rules.model.Argument;
 import io.steviemul.slalom.rules.model.EntryRule;
 import io.steviemul.slalom.rules.model.Rule;
 import io.steviemul.slalom.rules.model.RuleCollection;
 import io.steviemul.slalom.rules.model.SinkRule;
-import lombok.Getter;
-
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import lombok.Getter;
 
 @Getter
 public class RuleInterpreterVisitor extends RuleParserBaseVisitor<List<RuleCollection>> {
@@ -18,16 +16,16 @@ public class RuleInterpreterVisitor extends RuleParserBaseVisitor<List<RuleColle
   @Override
   public List<RuleCollection> visitRules(RuleParser.RulesContext ctx) {
 
-    return ctx.ruleList().ruleCollection()
-        .stream().map(this::ruleCollectionDefinition)
+    return ctx.ruleList().ruleCollection().stream()
+        .map(this::ruleCollectionDefinition)
         .collect(Collectors.toList());
   }
 
   public RuleCollection ruleCollectionDefinition(RuleParser.RuleCollectionContext ctx) {
 
     String name = ctx.qualifiedName().getText();
-    List<Rule> rules = ctx.ruleDeclaration()
-        .stream().map(this::ruleDefinition).collect(Collectors.toList());
+    List<Rule> rules =
+        ctx.ruleDeclaration().stream().map(this::ruleDefinition).collect(Collectors.toList());
 
     return new RuleCollection(name, rules);
   }
@@ -48,7 +46,7 @@ public class RuleInterpreterVisitor extends RuleParserBaseVisitor<List<RuleColle
     EntryRule entryRule = new EntryRule();
 
     entryRule.name(ctx.qualifiedName().getText());
-    
+
     return entryRule;
   }
 

@@ -22,6 +22,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitCompilationUnit(JavaParser.CompilationUnitContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -32,6 +33,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitPackageDeclaration(JavaParser.PackageDeclarationContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -42,6 +44,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitImportDeclaration(JavaParser.ImportDeclarationContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -52,6 +55,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitTypeDeclaration(JavaParser.TypeDeclarationContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -62,6 +66,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitModifier(JavaParser.ModifierContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -72,6 +77,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitClassOrInterfaceModifier(JavaParser.ClassOrInterfaceModifierContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -82,6 +88,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitVariableModifier(JavaParser.VariableModifierContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -92,6 +99,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitClassDeclaration(JavaParser.ClassDeclarationContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -102,6 +110,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitTypeParameters(JavaParser.TypeParametersContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -112,6 +121,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitTypeParameter(JavaParser.TypeParameterContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -122,6 +132,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitTypeBound(JavaParser.TypeBoundContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -132,6 +143,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitEnumDeclaration(JavaParser.EnumDeclarationContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -142,6 +154,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitEnumConstants(JavaParser.EnumConstantsContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -152,6 +165,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitEnumConstant(JavaParser.EnumConstantContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -162,6 +176,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitEnumBodyDeclarations(JavaParser.EnumBodyDeclarationsContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -172,6 +187,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitInterfaceDeclaration(JavaParser.InterfaceDeclarationContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -182,6 +198,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitClassBody(JavaParser.ClassBodyContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -192,6 +209,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitInterfaceBody(JavaParser.InterfaceBodyContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -202,6 +220,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitClassBodyDeclaration(JavaParser.ClassBodyDeclarationContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -212,6 +231,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitMemberDeclaration(JavaParser.MemberDeclarationContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -222,6 +242,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitMethodDeclaration(JavaParser.MethodDeclarationContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -232,6 +253,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitMethodBody(JavaParser.MethodBodyContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -242,6 +264,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitTypeTypeOrVoid(JavaParser.TypeTypeOrVoidContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -252,6 +275,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitGenericMethodDeclaration(JavaParser.GenericMethodDeclarationContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -262,6 +286,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitGenericConstructorDeclaration(JavaParser.GenericConstructorDeclarationContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -272,6 +297,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitConstructorDeclaration(JavaParser.ConstructorDeclarationContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -282,6 +308,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitCompactConstructorDeclaration(JavaParser.CompactConstructorDeclarationContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -292,6 +319,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitFieldDeclaration(JavaParser.FieldDeclarationContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -302,6 +330,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitInterfaceBodyDeclaration(JavaParser.InterfaceBodyDeclarationContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -312,6 +341,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitInterfaceMemberDeclaration(JavaParser.InterfaceMemberDeclarationContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -322,6 +352,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitConstDeclaration(JavaParser.ConstDeclarationContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -332,6 +363,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitConstantDeclarator(JavaParser.ConstantDeclaratorContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -342,6 +374,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitInterfaceMethodDeclaration(JavaParser.InterfaceMethodDeclarationContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -352,6 +385,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitInterfaceMethodModifier(JavaParser.InterfaceMethodModifierContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -363,6 +397,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
       JavaParser.GenericInterfaceMethodDeclarationContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -374,6 +409,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
       JavaParser.InterfaceCommonBodyDeclarationContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -384,6 +420,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitVariableDeclarators(JavaParser.VariableDeclaratorsContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -394,6 +431,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitVariableDeclarator(JavaParser.VariableDeclaratorContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -404,6 +442,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitVariableDeclaratorId(JavaParser.VariableDeclaratorIdContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -414,6 +453,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitVariableInitializer(JavaParser.VariableInitializerContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -424,6 +464,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitArrayInitializer(JavaParser.ArrayInitializerContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -434,6 +475,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitClassOrInterfaceType(JavaParser.ClassOrInterfaceTypeContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -444,6 +486,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitTypeArgument(JavaParser.TypeArgumentContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -454,6 +497,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitQualifiedNameList(JavaParser.QualifiedNameListContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -464,6 +508,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitFormalParameters(JavaParser.FormalParametersContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -474,6 +519,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitReceiverParameter(JavaParser.ReceiverParameterContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -484,6 +530,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitFormalParameterList(JavaParser.FormalParameterListContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -494,6 +541,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitFormalParameter(JavaParser.FormalParameterContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -504,6 +552,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitLastFormalParameter(JavaParser.LastFormalParameterContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -514,6 +563,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitLambdaLVTIList(JavaParser.LambdaLVTIListContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -524,6 +574,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitLambdaLVTIParameter(JavaParser.LambdaLVTIParameterContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -534,6 +585,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitQualifiedName(JavaParser.QualifiedNameContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -544,6 +596,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitLiteral(JavaParser.LiteralContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -554,6 +607,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitIntegerLiteral(JavaParser.IntegerLiteralContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -564,6 +618,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitFloatLiteral(JavaParser.FloatLiteralContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -574,6 +629,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitAltAnnotationQualifiedName(JavaParser.AltAnnotationQualifiedNameContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -584,6 +640,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitAnnotation(JavaParser.AnnotationContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -594,6 +651,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitElementValuePairs(JavaParser.ElementValuePairsContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -604,6 +662,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitElementValuePair(JavaParser.ElementValuePairContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -614,6 +673,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitElementValue(JavaParser.ElementValueContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -624,6 +684,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitElementValueArrayInitializer(JavaParser.ElementValueArrayInitializerContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -634,6 +695,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitAnnotationTypeDeclaration(JavaParser.AnnotationTypeDeclarationContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -644,6 +706,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitAnnotationTypeBody(JavaParser.AnnotationTypeBodyContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -655,6 +718,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
       JavaParser.AnnotationTypeElementDeclarationContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -665,6 +729,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitAnnotationTypeElementRest(JavaParser.AnnotationTypeElementRestContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -676,6 +741,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
       JavaParser.AnnotationMethodOrConstantRestContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -686,6 +752,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitAnnotationMethodRest(JavaParser.AnnotationMethodRestContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -696,6 +763,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitAnnotationConstantRest(JavaParser.AnnotationConstantRestContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -706,6 +774,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitDefaultValue(JavaParser.DefaultValueContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -716,6 +785,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitModuleDeclaration(JavaParser.ModuleDeclarationContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -726,6 +796,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitModuleBody(JavaParser.ModuleBodyContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -736,6 +807,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitModuleDirective(JavaParser.ModuleDirectiveContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -746,6 +818,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitRequiresModifier(JavaParser.RequiresModifierContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -756,6 +829,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitRecordDeclaration(JavaParser.RecordDeclarationContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -766,6 +840,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitRecordHeader(JavaParser.RecordHeaderContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -776,6 +851,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitRecordComponentList(JavaParser.RecordComponentListContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -786,6 +862,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitRecordComponent(JavaParser.RecordComponentContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -796,6 +873,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitRecordBody(JavaParser.RecordBodyContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -806,6 +884,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitBlock(JavaParser.BlockContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -816,6 +895,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitBlockStatement(JavaParser.BlockStatementContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -826,6 +906,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitLocalVariableDeclaration(JavaParser.LocalVariableDeclarationContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -836,6 +917,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitIdentifier(JavaParser.IdentifierContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -846,6 +928,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitTypeIdentifier(JavaParser.TypeIdentifierContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -856,6 +939,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitLocalTypeDeclaration(JavaParser.LocalTypeDeclarationContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -866,6 +950,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitStatement(JavaParser.StatementContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -876,6 +961,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitCatchClause(JavaParser.CatchClauseContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -886,6 +972,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitCatchType(JavaParser.CatchTypeContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -896,6 +983,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitFinallyBlock(JavaParser.FinallyBlockContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -906,6 +994,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitResourceSpecification(JavaParser.ResourceSpecificationContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -916,6 +1005,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitResources(JavaParser.ResourcesContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -926,6 +1016,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitResource(JavaParser.ResourceContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -936,6 +1027,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitSwitchBlockStatementGroup(JavaParser.SwitchBlockStatementGroupContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -946,6 +1038,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitSwitchLabel(JavaParser.SwitchLabelContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -956,6 +1049,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitForControl(JavaParser.ForControlContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -966,6 +1060,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitForInit(JavaParser.ForInitContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -976,6 +1071,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitEnhancedForControl(JavaParser.EnhancedForControlContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -986,6 +1082,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitParExpression(JavaParser.ParExpressionContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -996,6 +1093,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitExpressionList(JavaParser.ExpressionListContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -1006,6 +1104,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitMethodCall(JavaParser.MethodCallContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -1016,6 +1115,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitExpression(JavaParser.ExpressionContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -1026,6 +1126,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitPattern(JavaParser.PatternContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -1036,6 +1137,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitLambdaExpression(JavaParser.LambdaExpressionContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -1046,6 +1148,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitLambdaParameters(JavaParser.LambdaParametersContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -1056,6 +1159,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitLambdaBody(JavaParser.LambdaBodyContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -1066,6 +1170,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitPrimary(JavaParser.PrimaryContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -1076,6 +1181,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitSwitchExpression(JavaParser.SwitchExpressionContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -1086,6 +1192,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitSwitchLabeledRule(JavaParser.SwitchLabeledRuleContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -1096,6 +1203,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitGuardedPattern(JavaParser.GuardedPatternContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -1106,6 +1214,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitSwitchRuleOutcome(JavaParser.SwitchRuleOutcomeContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -1116,6 +1225,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitClassType(JavaParser.ClassTypeContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -1126,6 +1236,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitCreator(JavaParser.CreatorContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -1136,6 +1247,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitCreatedName(JavaParser.CreatedNameContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -1146,6 +1258,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitInnerCreator(JavaParser.InnerCreatorContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -1156,6 +1269,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitArrayCreatorRest(JavaParser.ArrayCreatorRestContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -1166,6 +1280,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitClassCreatorRest(JavaParser.ClassCreatorRestContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -1176,6 +1291,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitExplicitGenericInvocation(JavaParser.ExplicitGenericInvocationContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -1186,6 +1302,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitTypeArgumentsOrDiamond(JavaParser.TypeArgumentsOrDiamondContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -1197,6 +1314,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
       JavaParser.NonWildcardTypeArgumentsOrDiamondContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -1207,6 +1325,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitNonWildcardTypeArguments(JavaParser.NonWildcardTypeArgumentsContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -1217,6 +1336,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitTypeList(JavaParser.TypeListContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -1227,6 +1347,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitTypeType(JavaParser.TypeTypeContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -1237,6 +1358,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitPrimitiveType(JavaParser.PrimitiveTypeContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -1247,6 +1369,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitTypeArguments(JavaParser.TypeArgumentsContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -1257,6 +1380,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
   public T visitSuperSuffix(JavaParser.SuperSuffixContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *
@@ -1268,6 +1392,7 @@ public class JavaParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
       JavaParser.ExplicitGenericInvocationSuffixContext ctx) {
     return visitChildren(ctx);
   }
+
   /**
    * {@inheritDoc}
    *

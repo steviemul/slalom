@@ -2,10 +2,9 @@ package io.steviemul.slalom.analyser;
 
 import io.steviemul.slalom.Cache;
 import io.steviemul.slalom.utils.FileUtils;
+import java.nio.file.Path;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
-
-import java.nio.file.Path;
 
 class AnalyserTest {
 
@@ -15,13 +14,11 @@ class AnalyserTest {
   void basic_test() {
 
     Path exampleDirectory = FileUtils.findModuleDirectory("slalom", "example");
-    Path examplesPath = Path.of(exampleDirectory.toString(),
-        "src", "main", "java");
+    Path examplesPath = Path.of(exampleDirectory.toString(), "src", "main", "java");
 
     Analyser analyser = new Analyser(cache);
 
     analyser.analyze(examplesPath.toString());
-
   }
 
   @Test

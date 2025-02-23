@@ -6,11 +6,10 @@ import io.steviemul.slalom.parser.Parser;
 import io.steviemul.slalom.serializer.ASTRootSerializer;
 import io.steviemul.slalom.utils.HashUtils;
 import io.steviemul.slalom.utils.IOUtils;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-
 import java.io.File;
 import java.nio.charset.StandardCharsets;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -50,18 +49,21 @@ public class Analyser {
 
           astRoot = ASTRootSerializer.fromJsonBytes(contents);
 
-          log.info("AST Successfully loaded from store [{}, {}]",
+          log.info(
+              "AST Successfully loaded from store [{}, {}]",
               astRoot.packageDeclaration().name(),
               astRoot.typeDeclaration().name());
 
         } else {
           astRoot = parser.parse(path, source);
 
-          String packageName = astRoot.packageDeclaration() != null
-              ? astRoot.packageDeclaration().name()
-              : "UNKNOWN";
+          String packageName =
+              astRoot.packageDeclaration() != null
+                  ? astRoot.packageDeclaration().name()
+                  : "UNKNOWN";
 
-          log.info("AST Successfully parsed from source [{}, {}]",
+          log.info(
+              "AST Successfully parsed from source [{}, {}]",
               packageName,
               astRoot.typeDeclaration().name());
         }

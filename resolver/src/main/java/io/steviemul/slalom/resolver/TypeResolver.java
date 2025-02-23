@@ -6,6 +6,14 @@ import io.steviemul.slalom.model.java.ImportDeclaration;
 import io.steviemul.slalom.model.java.MethodDeclaration;
 import io.steviemul.slalom.model.java.VariableDeclaration;
 import io.steviemul.slalom.model.java.visitor.AbstractRefVisitor;
+import java.io.InputStream;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.bcel.Repository;
@@ -15,15 +23,6 @@ import org.apache.bcel.classfile.Method;
 import org.apache.bcel.generic.Type;
 import org.reflections.Reflections;
 import org.reflections.scanners.SubTypesScanner;
-
-import java.io.InputStream;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.TreeMap;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Getter
@@ -40,8 +39,7 @@ public class TypeResolver extends AbstractRefVisitor {
 
     Date start = new Date();
 
-    String fqn = astRoot.packageDeclaration().name() +
-        "." + astRoot.typeDeclaration().name();
+    String fqn = astRoot.packageDeclaration().name() + "." + astRoot.typeDeclaration().name();
 
     classes.put(fqn, astRoot.typeDeclaration());
 
@@ -75,9 +73,11 @@ public class TypeResolver extends AbstractRefVisitor {
     shadowClass.fqn(fqn);
     shadowClass.name(getClassName(fqn));
 
-    Arrays.stream(javaClass.getMethods()).forEach(method -> {
-      shadowClass.memberDeclarations().add(fromMethod(method));
-    });
+    Arrays.stream(javaClass.getMethods())
+        .forEach(
+            method -> {
+              shadowClass.memberDeclarations().add(fromMethod(method));
+            });
 
     classes.put(fqn, shadowClass);
   }
@@ -85,21 +85,17 @@ public class TypeResolver extends AbstractRefVisitor {
   private static MethodDeclaration fromMethod(Method method) {
     MethodDeclaration methodDeclaration = new MethodDeclaration();
 
-    if (method.isPublic())
-      methodDeclaration.modifiers().add("public");
-    if (method.isPrivate())
-      methodDeclaration.modifiers().add("private");
-    if (method.isStatic())
-      methodDeclaration.modifiers().add("static");
-    if (method.isFinal())
-      methodDeclaration.modifiers().add("final");
+    if (method.isPublic()) methodDeclaration.modifiers().add("public");
+    if (method.isPrivate()) methodDeclaration.modifiers().add("private");
+    if (method.isStatic()) methodDeclaration.modifiers().add("static");
+    if (method.isFinal()) methodDeclaration.modifiers().add("final");
 
     methodDeclaration.name(method.getName());
     methodDeclaration.type(method.getReturnType().getClassName());
     methodDeclaration.parameters(
-        Arrays.stream(method.getArgumentTypes()).map(
-            TypeResolver::fromType
-        ).collect(Collectors.toList()));
+        Arrays.stream(method.getArgumentTypes())
+            .map(TypeResolver::fromType)
+            .collect(Collectors.toList()));
 
     return methodDeclaration;
   }

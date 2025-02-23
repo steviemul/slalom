@@ -1,8 +1,7 @@
 package io.steviemul.slalom.resolver;
 
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 

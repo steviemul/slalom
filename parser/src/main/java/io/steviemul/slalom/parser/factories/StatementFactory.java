@@ -1,23 +1,22 @@
 package io.steviemul.slalom.parser.factories;
 
+import static io.steviemul.slalom.utils.ContextUtils.logUnhandled;
+
 import io.steviemul.slalom.antlr.JavaParser;
 import io.steviemul.slalom.model.java.BlockStatement;
 import io.steviemul.slalom.model.java.EnhancedForStatement;
 import io.steviemul.slalom.model.java.ForStatement;
-import io.steviemul.slalom.model.java.StandardForStatement;
-import io.steviemul.slalom.model.java.StatementExpression;
 import io.steviemul.slalom.model.java.IfStatement;
 import io.steviemul.slalom.model.java.LocalVariableDeclarationStatement;
 import io.steviemul.slalom.model.java.ReturnStatement;
+import io.steviemul.slalom.model.java.StandardForStatement;
 import io.steviemul.slalom.model.java.Statement;
+import io.steviemul.slalom.model.java.StatementExpression;
 import io.steviemul.slalom.model.java.VariableDeclaration;
 import io.steviemul.slalom.model.java.WhileStatement;
 import io.steviemul.slalom.utils.CollectionUtils;
-import lombok.extern.slf4j.Slf4j;
-
 import java.util.stream.Collectors;
-
-import static io.steviemul.slalom.utils.ContextUtils.logUnhandled;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class StatementFactory {
@@ -65,7 +64,8 @@ public class StatementFactory {
     }
 
     if (ctx.expression() != null) {
-      localVariableDeclarationStatement.initializer(ExpressionFactory.fromContext(ctx.expression()));
+      localVariableDeclarationStatement.initializer(
+          ExpressionFactory.fromContext(ctx.expression()));
     } else if (ctx.variableDeclarators() != null) {
       localVariableDeclarationStatement.variableDeclarations(
           ctx.variableDeclarators().variableDeclarator().stream()
@@ -110,9 +110,12 @@ public class StatementFactory {
   public static BlockStatement blockStatement(JavaParser.StatementContext ctx) {
     BlockStatement blockStatement = new BlockStatement();
 
-    ctx.block().blockStatement().forEach(blockStatementContext -> {
-      blockStatement.statements().add(fromContext(blockStatementContext));
-    });
+    ctx.block()
+        .blockStatement()
+        .forEach(
+            blockStatementContext -> {
+              blockStatement.statements().add(fromContext(blockStatementContext));
+            });
 
     blockStatement.position(ctx);
     return blockStatement;
@@ -154,9 +157,10 @@ public class StatementFactory {
   }
 
   public static ForStatement forStatement(JavaParser.StatementContext ctx) {
-    ForStatement forStatement = ctx.forControl().enhancedForControl() != null
-        ? enhancedForStatement(ctx.forControl().enhancedForControl())
-        : standardForStatement(ctx.forControl());
+    ForStatement forStatement =
+        ctx.forControl().enhancedForControl() != null
+            ? enhancedForStatement(ctx.forControl().enhancedForControl())
+            : standardForStatement(ctx.forControl());
 
     forStatement.statement(fromContext(ctx.statement(0)));
     forStatement.position(ctx);
@@ -172,7 +176,6 @@ public class StatementFactory {
           StatementFactory.fromContext(ctx.forInit().localVariableDeclaration()));
     }
 
-
     if (ctx.forInit().expressionList() != null) {
       forStatement.initExpressions(
           ctx.forInit().expressionList().expression().stream()
@@ -183,9 +186,10 @@ public class StatementFactory {
     forStatement.expression(ExpressionFactory.fromContext(ctx.expression()));
 
     if (ctx.forUpdate != null) {
-      forStatement.updateExpressions(ctx.forUpdate.expression().stream()
-          .map(ExpressionFactory::fromContext)
-          .collect(Collectors.toList()));
+      forStatement.updateExpressions(
+          ctx.forUpdate.expression().stream()
+              .map(ExpressionFactory::fromContext)
+              .collect(Collectors.toList()));
     }
 
     return forStatement;

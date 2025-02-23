@@ -1,12 +1,11 @@
 package io.steviemul.slalom.rules;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import io.steviemul.slalom.rules.model.RuleCollection;
 import io.steviemul.slalom.rules.utils.IOUtils;
-import org.junit.jupiter.api.Test;
-
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import org.junit.jupiter.api.Test;
 
 class RuleInterpreterTest {
 

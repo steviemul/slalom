@@ -26,7 +26,7 @@
         <maven.compiler.target>21</maven.compiler.target>
 
         <!-- plugins -->
-        <fmt-maven-plugin.version>2.10</fmt-maven-plugin.version>
+        <fmt-maven-plugin.version>2.25</fmt-maven-plugin.version>
 
         <!-- 3rd party libraries -->
         <antlr.version>4.13.0</antlr.version>
@@ -109,7 +109,7 @@
         <pluginManagement>
             <plugins>
                 <plugin>
-                    <groupId>com.coveo</groupId>
+                    <groupId>om.spotify.fmt</groupId>
                     <artifactId>fmt-maven-plugin</artifactId>
                     <version>${fmt-maven-plugin.version}</version>
                     <executions>
