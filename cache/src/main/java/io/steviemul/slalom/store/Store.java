@@ -11,4 +11,6 @@ public interface Store<K, V> {
   V remove(K key) throws StoreException;
 
   void clear() throws StoreException;
+
+  void close();
 }

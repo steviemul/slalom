@@ -1,14 +1,15 @@
 package io.steviemul.slalom;
 
 import io.steviemul.slalom.event.LRUMapListener;
-import io.steviemul.slalom.store.KeyValueStore;
 import io.steviemul.slalom.store.LRUStore;
 import io.steviemul.slalom.store.NoopStore;
 import io.steviemul.slalom.store.Store;
 import io.steviemul.slalom.store.StoreException;
-import lombok.extern.slf4j.Slf4j;
+import io.steviemul.slalom.store.kv.KeyValueStore;
 
 import java.util.Map;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class Cache<K, V> implements LRUMapListener<K, V>, Store<K, V> {
@@ -17,10 +18,10 @@ public class Cache<K, V> implements LRUMapListener<K, V>, Store<K, V> {
   private final Store<K, V> backingStore;
 
   public Cache() {
-    memoryStore = new LRUStore<>();
-    backingStore = new NoopStore<>();
+    this.memoryStore = new LRUStore<>();
+    this.backingStore = new NoopStore<>();
   }
-
+  
   public Cache(int maxMemoryObjects, String name) {
     memoryStore = new LRUStore<>(maxMemoryObjects);
     memoryStore.addEventListener(this);
@@ -34,8 +35,7 @@ public class Cache<K, V> implements LRUMapListener<K, V>, Store<K, V> {
 
   @Override
   public boolean contains(K key) throws StoreException {
-    return memoryStore.containsKey(key)
-        || backingStore.contains(key);
+    return memoryStore.containsKey(key) || backingStore.contains(key);
   }
 
   @Override
@@ -74,11 +74,17 @@ public class Cache<K, V> implements LRUMapListener<K, V>, Store<K, V> {
   }
 
   @Override
+  public void close() {
+  }
+
+  @Override
   public void objectEvicted(Map.Entry<K, V> entry) {
     try {
       backingStore.put(entry.getKey(), entry.getValue());
 
-      log.info("Object evicted from memory store and persisted to backing store [key={}]", entry.getKey());
+      log.info(
+          "Object evicted from memory store and persisted to backing store [key={}]",
+          entry.getKey());
     } catch (StoreException e) {
       log.error("Error persisting object to backing store", e);
     }

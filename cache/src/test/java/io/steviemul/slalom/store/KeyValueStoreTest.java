@@ -1,13 +1,10 @@
 package io.steviemul.slalom.store;
 
-
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
-import org.junit.jupiter.api.Test;
-
-import java.io.Serializable;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import io.steviemul.slalom.store.kv.KeyValueStore;
+import java.io.Serializable;
+import org.junit.jupiter.api.Test;
 
 class KeyValueStoreTest {
 
@@ -27,8 +24,9 @@ class KeyValueStoreTest {
 
     assertEquals(bob, actualBob);
     assertEquals(alice, actualAlice);
+
+    store.close();
   }
-  
-  record Person(String firstName, String surname, int age) implements Serializable {
-  }
+
+  record Person(String firstName, String surname, int age) implements Serializable {}
 }

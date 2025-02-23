@@ -1,7 +1,6 @@
 package io.steviemul.slalom.store;
 
-import io.steviemul.slalom.store.Store;
-import lombok.extern.slf4j.Slf4j;
+import static io.steviemul.slalom.store.Utils.deleteDirectory;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -12,8 +11,7 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.util.LinkedHashMap;
 import java.util.UUID;
-
-import static io.steviemul.slalom.store.Utils.deleteDirectory;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class OfflineStore<K, V> implements Store<K, V> {
@@ -93,14 +91,16 @@ public class OfflineStore<K, V> implements Store<K, V> {
     deleteDirectory(root);
   }
 
+  @Override
+  public void close() {}
+
   private void saveIndex() {
     writeObject(index, new File(root, INDEX));
   }
 
   private void writeObject(Object obj, File location) {
 
-    if (location.exists())
-      return;
+    if (location.exists()) return;
 
     try (OutputStream fOut = new FileOutputStream(location)) {
       try (ObjectOutputStream oOut = new ObjectOutputStream(fOut)) {
@@ -121,5 +121,4 @@ public class OfflineStore<K, V> implements Store<K, V> {
       throw new RuntimeException("Unable to read object", e);
     }
   }
-
 }

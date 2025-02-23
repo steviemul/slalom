@@ -23,7 +23,8 @@ public class NoopStore<K, V> implements Store<K, V> {
   }
 
   @Override
-  public void clear() {
+  public void clear() {}
 
-  }
+  @Override
+  public void close() {}
 }

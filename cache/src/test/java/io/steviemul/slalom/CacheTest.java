@@ -1,19 +1,17 @@
 package io.steviemul.slalom;
 
-
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.Serializable;
 import java.util.Date;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.Test;
 
 class CacheTest {
 
   private static final String NAME = ".unit-tests";
 
   @Test
-  void test_basic_cache() throws Exception {
+  void test_basic_cache() {
 
     long start = new Date().getTime();
 
@@ -48,8 +46,9 @@ class CacheTest {
     long end = new Date().getTime();
 
     System.out.println("Number of ms : " + (end - start));
+
+    cache.close();
   }
 
-  record Person(String firstName, String surname, int age) implements Serializable {
-  }
+  record Person(String firstName, String surname, int age) implements Serializable {}
 }

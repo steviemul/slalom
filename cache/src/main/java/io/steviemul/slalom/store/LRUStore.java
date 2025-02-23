@@ -1,8 +1,6 @@
 package io.steviemul.slalom.store;
 
 import io.steviemul.slalom.event.LRUMapListener;
-import io.steviemul.slalom.store.Store;
-
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -10,7 +8,7 @@ import java.util.Map;
 
 public class LRUStore<K, V> extends LinkedHashMap<K, V> implements Store<K, V> {
 
-  private final static float LOAD_FACTOR = 0.75f;
+  private static final float LOAD_FACTOR = 0.75f;
   private final int capacity;
   private final List<LRUMapListener<K, V>> eventListeners = new ArrayList<>();
 
@@ -44,4 +42,7 @@ public class LRUStore<K, V> extends LinkedHashMap<K, V> implements Store<K, V> {
   public boolean contains(K key) {
     return this.containsKey(key);
   }
+
+  @Override
+  public void close() {}
 }
