@@ -17,7 +17,6 @@
         <module>rule-parser</module>
         <module>slalom-cli</module>
         <module>utils</module>
-        <module>cache</module>
     </modules>
 
     <properties>
@@ -39,7 +38,8 @@
         <jackson.version>2.15.2</jackson.version>
         <picocli.version>4.7.4</picocli.version>
         <commons-codec.version>1.16.0</commons-codec.version>
-
+        <steviemul-offily.version>0.0.1-SNAPSHOT</steviemul-offily.version>
+        
         <!-- test libraries -->
         <junit.jupiter.version>5.8.1</junit.jupiter.version>
         <surefire.plugin.version>3.1.2</surefire.plugin.version>
@@ -94,6 +94,12 @@
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
             <version>${commons-codec.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.steviemul</groupId>
+            <artifactId>offily</artifactId>
+            <version>${steviemul-offily.version}</version>
         </dependency>
 
         <dependency>

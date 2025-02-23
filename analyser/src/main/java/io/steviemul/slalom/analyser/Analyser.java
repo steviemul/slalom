@@ -1,13 +1,15 @@
 package io.steviemul.slalom.analyser;
 
-import io.steviemul.slalom.Cache;
+import io.steviemul.offily.Cache;
 import io.steviemul.slalom.model.java.ASTRoot;
 import io.steviemul.slalom.parser.Parser;
 import io.steviemul.slalom.serializer.ASTRootSerializer;
 import io.steviemul.slalom.utils.HashUtils;
 import io.steviemul.slalom.utils.IOUtils;
+
 import java.io.File;
 import java.nio.charset.StandardCharsets;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

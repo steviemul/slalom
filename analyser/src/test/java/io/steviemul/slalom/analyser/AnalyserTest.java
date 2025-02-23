@@ -1,6 +1,6 @@
 package io.steviemul.slalom.analyser;
 
-import io.steviemul.slalom.Cache;
+import io.steviemul.offily.Cache;
 import io.steviemul.slalom.utils.FileUtils;
 
 import java.nio.file.Path;
