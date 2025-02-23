@@ -1,6 +1,7 @@
 package io.steviemul.slalom.store.kv;
 
 import static io.steviemul.slalom.store.Utils.encodeBytes;
+import static io.steviemul.slalom.store.Utils.getStoreFilename;
 import static io.steviemul.slalom.store.Utils.objectToBase64String;
 import static io.steviemul.slalom.store.kv.LogEntry.OPERATION_PUT;
 import static io.steviemul.slalom.store.kv.LogEntry.OPERATION_REMOVE;
@@ -20,7 +21,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class WriteAheadLog<K, V> {
 
-  private static final String LOG_FILE = "ops.log";
+  private static final String LOG_FILE = "ops";
+  private static final String EXT = "log";
   private static final String LOG_DELIM = ":";
   private static final String NEWLINE = "\n";
 
@@ -28,7 +30,13 @@ public class WriteAheadLog<K, V> {
   private final BufferedWriter logWriter;
 
   public WriteAheadLog(File root) throws IOException {
-    this.logFile = new File(root, LOG_FILE);
+    this(root, null);
+  }
+
+  public WriteAheadLog(File root, Integer identifier) throws IOException {
+    String logFilename = getStoreFilename(LOG_FILE, EXT, identifier);
+
+    this.logFile = new File(root, logFilename);
     this.logWriter = new BufferedWriter(new FileWriter(this.logFile, true));
   }
 

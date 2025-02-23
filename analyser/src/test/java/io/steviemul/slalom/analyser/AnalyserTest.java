@@ -2,7 +2,9 @@ package io.steviemul.slalom.analyser;
 
 import io.steviemul.slalom.Cache;
 import io.steviemul.slalom.utils.FileUtils;
+
 import java.nio.file.Path;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
@@ -24,7 +26,9 @@ class AnalyserTest {
   @Test
   void webgoat_test() {
 
-    Analyser analyser = new Analyser(cache);
+    Cache<String, byte[]> webgoatCache = new Cache<>(5, ".ast");
+
+    Analyser analyser = new Analyser(webgoatCache);
 
     analyser.analyze("/Users/stephenmulrennan/dev/git/WebGoat");
   }

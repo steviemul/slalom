@@ -1,18 +1,17 @@
 package io.steviemul.slalom.store.kv;
 
-import static io.steviemul.slalom.store.Utils.base64StringToObject;
-import static io.steviemul.slalom.store.Utils.bytesToObject;
 import static io.steviemul.slalom.store.Utils.deleteDirectory;
-import static io.steviemul.slalom.store.Utils.objectToBytes;
+import static io.steviemul.slalom.store.Utils.getDataFileRecord;
+import static io.steviemul.slalom.store.Utils.getStoreFilename;
+import static io.steviemul.slalom.store.kv.DataFile.DATA_EXT;
+import static io.steviemul.slalom.store.kv.DataFile.DATA_FILE;
 
 import io.steviemul.slalom.store.Store;
 import io.steviemul.slalom.store.StoreException;
 import java.io.File;
-import java.io.IOException;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import lombok.extern.slf4j.Slf4j;
@@ -22,48 +21,57 @@ public class KeyValueStore<K, V> implements Store<K, V> {
 
   private static final String BASE_ROOT_FOLDER = ".cache";
   private final File root;
-  private final DataFile<K> dataFile;
 
-  private final Index<K, Long> index;
+  private final Map<Integer, Shard<K, V>> shards = new ConcurrentHashMap<>();
+  private final Index<K, Integer> keyShardIndex;
   private final ReadWriteLock lock = new ReentrantReadWriteLock();
-  private final ScheduledExecutorService compactionScheduler =
-      Executors.newSingleThreadScheduledExecutor();
-
-  private final WriteAheadLog<K, V> writeAheadLog;
 
   public KeyValueStore(String name) throws StoreException {
+    this.root = initRoot(name);
+    this.keyShardIndex = new Index<>(this.root, Integer::parseInt);
 
-    try {
-      this.root = initRoot(name);
-      this.index = new Index<>(this.root, Long::parseLong);
-      this.dataFile = new DataFile<>(this.root, this.index);
-      this.writeAheadLog = new WriteAheadLog<>(this.root);
+    loadShards();
+  }
 
-      recoverFromLog();
-      startBackgroundCompaction();
-    } catch (IOException e) {
-      throw new StoreException("Unable to create key value store", e);
+  private void loadShards() {
+    int shardId = 0;
+
+    File shardDataFile = new File(root, getStoreFilename(DATA_FILE, DATA_EXT, shardId));
+
+    while (shardDataFile.exists()) {
+      Shard<K, V> shard = new Shard<>(root, shardId);
+      shards.put(shardId, shard);
+
+      log.info("Loaded shard [shardId={}]", shardId);
+
+      shardId++;
+      shardDataFile = new File(root, getStoreFilename(DATA_FILE, DATA_EXT, shardId));
+    }
+
+    if (shards.isEmpty()) {
+      Shard<K, V> shard = new Shard<>(root, 0);
+      shards.put(0, shard);
+      log.info("Created new shard [shardId={}]", 0);
     }
   }
 
   @Override
   public boolean contains(K key) {
-    return index.contains(key);
+    lock.readLock().lock();
+
+    try {
+      return getShard(key).map(s -> s.contains(key)).orElse(false);
+    } finally {
+      lock.readLock().unlock();
+    }
   }
 
   @Override
-  @SuppressWarnings("unchecked")
   public V get(K key) {
     lock.readLock().lock();
 
     try {
-      Long position = index.get(key);
-
-      if (position == null) return null;
-
-      DataFileRecord record = dataFile.get(position);
-
-      return (V) bytesToObject(record.value());
+      return getShard(key).map(s -> s.get(key)).orElse(null);
     } finally {
       lock.readLock().unlock();
     }
@@ -71,34 +79,16 @@ public class KeyValueStore<K, V> implements Store<K, V> {
 
   @Override
   public V put(K key, V value) throws StoreException {
-    return put(key, value, true);
-  }
-
-  private V put(K key, V value, boolean addToLog) throws StoreException {
     lock.writeLock().lock();
-
     try {
-      byte[] keyBytes = objectToBytes(key);
-      byte[] valueBytes = objectToBytes(value);
+      DataFileRecord record = getDataFileRecord(key, value);
 
-      DataFileRecord record = new DataFileRecord(keyBytes, valueBytes);
+      Shard<K, V> shard = getWritableShardFor(record);
 
-      if (!dataFile.hasSpaceFor(record)) {
-        log.error("Data file is full, consider compacting or increasing size");
-        return null;
-      }
-
-      if (addToLog) {
-        writeAheadLog.put(keyBytes, valueBytes);
-      }
-
-      long position = dataFile.put(record);
-
-      index.put(key, position);
+      shard.put(key, value);
+      keyShardIndex.put(key, shard.getId());
 
       return value;
-    } catch (IOException e) {
-      throw new StoreException("Unable to put object", e);
     } finally {
       lock.writeLock().unlock();
     }
@@ -107,17 +97,8 @@ public class KeyValueStore<K, V> implements Store<K, V> {
   @Override
   public V remove(K key) throws StoreException {
     lock.writeLock().lock();
-
     try {
-      V value = get(key);
-
-      if (value != null && index.remove(key) != null) {
-        writeAheadLog.remove(key, null);
-      }
-
-      return value;
-    } catch (IOException e) {
-      throw new StoreException("Unable to remove object", e);
+      return removeShardKey(key).map(s -> s.remove(key)).orElse(null);
     } finally {
       lock.writeLock().unlock();
     }
@@ -126,6 +107,38 @@ public class KeyValueStore<K, V> implements Store<K, V> {
   @Override
   public void clear() {
     deleteDirectory(root);
+
+    for (Shard<K, V> shard : shards.values()) {
+      shard.clear();
+    }
+  }
+
+  private Optional<Shard<K, V>> getShard(K key) {
+    Integer shardId = keyShardIndex.get(key);
+
+    return shardId != null ? Optional.ofNullable(shards.get(shardId)) : Optional.empty();
+  }
+
+  private Optional<Shard<K, V>> removeShardKey(K key) {
+    Integer shardId = keyShardIndex.remove(key);
+
+    return shardId != null ? Optional.ofNullable(shards.get(shardId)) : Optional.empty();
+  }
+
+  private Shard<K, V> getWritableShardFor(DataFileRecord record) {
+    return shards.values().stream()
+        .filter(s -> s.hasSpaceFor(record))
+        .findFirst()
+        .orElseGet(this::createNewShard);
+  }
+
+  private Shard<K, V> createNewShard() {
+    int newShardId = shards.size();
+
+    Shard<K, V> shard = new Shard<>(this.root, newShardId);
+
+    shards.put(newShardId, shard);
+    return shard;
   }
 
   private File initRoot(String name) {
@@ -142,56 +155,9 @@ public class KeyValueStore<K, V> implements Store<K, V> {
     return root;
   }
 
-  @SuppressWarnings("unchecked")
-  private void recoverFromLog() throws IOException, StoreException {
-
-    AtomicInteger puts = new AtomicInteger();
-    AtomicInteger removes = new AtomicInteger();
-
-    writeAheadLog.processRecords(
-        entry -> {
-          String[] record = entry.getRecord();
-
-          K key = (K) base64StringToObject(record[0]);
-          V value = (V) (record.length == 2 ? base64StringToObject(record[1]) : null);
-
-          if (entry.isPut()) {
-            puts.getAndIncrement();
-            put(key, value, false);
-          } else if (entry.isRemove()) {
-            removes.getAndIncrement();
-            remove(key);
-          }
-        });
-
-    log.info("Recovered from log file[puts={}, removes={}]", puts, removes);
-  }
-
-  private void startBackgroundCompaction() {
-
-    compactionScheduler.scheduleAtFixedRate(
-        () -> {
-          try {
-            dataFile.compactDataFile();
-          } catch (Exception e) {
-            log.error("Error during compaction", e);
-          }
-        },
-        60,
-        60,
-        TimeUnit.SECONDS);
-
-    log.info("Compaction process initialized in background");
-  }
-
   public void close() {
-    try {
-      dataFile.close();
-      writeAheadLog.close();
-      index.close();
-      compactionScheduler.shutdown();
-    } catch (IOException e) {
-      log.error("Error releasing resources", e);
+    for (Shard<K, V> shard : shards.values()) {
+      shard.close();
     }
   }
 }

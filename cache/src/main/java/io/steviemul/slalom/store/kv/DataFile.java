@@ -1,5 +1,7 @@
 package io.steviemul.slalom.store.kv;
 
+import static io.steviemul.slalom.store.Utils.getStoreFilename;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -10,6 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -17,8 +20,9 @@ public class DataFile<K> {
 
   private static final String RW_MODE = "rw";
 
-  private static final String DATA_FILE = "data.db";
-  private static final String TEMP_DATA_FILE = "temp_data.db";
+  public static final String DATA_FILE = "data";
+  public static final String DATA_EXT = "db";
+  private static final String TEMP_DATA_FILE = "temp_data";
 
   private static final int MAX_FILE_SIZE = 100 * 1024 * 1024; // 100MB
 
@@ -27,14 +31,20 @@ public class DataFile<K> {
   private final FileChannel dataChannel;
   private final Index<K, Long> index;
   private final File root;
+  private final String dataFilename;
+  private final String tempFilename;
 
   private MappedByteBuffer dataBuffer;
 
-  public DataFile(File root, Index<K, Long> index) throws IOException {
+  public DataFile(File root, Index<K, Long> index, Integer identifier) throws IOException {
     this.root = root;
-    this.dataFile = new RandomAccessFile(new File(root, DATA_FILE), RW_MODE);
 
-    log.info("Data file initialized [location={}]", DATA_FILE);
+    this.dataFilename = getStoreFilename(DATA_FILE, DATA_EXT, identifier);
+    this.tempFilename = getStoreFilename(TEMP_DATA_FILE, DATA_EXT, identifier);
+
+    this.dataFile = new RandomAccessFile(new File(root, this.dataFilename), RW_MODE);
+
+    log.info("Data file initialized [location={}]", this.dataFilename);
 
     this.dataChannel = dataFile.getChannel();
     this.dataBuffer = dataChannel.map(FileChannel.MapMode.READ_WRITE, 0, MAX_FILE_SIZE);
@@ -87,7 +97,7 @@ public class DataFile<K> {
     lock.writeLock().lock();
 
     try {
-      File tempFile = new File(root, TEMP_DATA_FILE);
+      File tempFile = new File(root, this.tempFilename);
 
       try (RandomAccessFile tempRaf = new RandomAccessFile(tempFile, RW_MODE)) {
         FileChannel tempChannel = tempRaf.getChannel();
@@ -115,8 +125,8 @@ public class DataFile<K> {
 
         dataChannel.close();
         tempChannel.close();
-        Files.deleteIfExists(new File(root, DATA_FILE).toPath());
-        tempFile.renameTo(new File(root, DATA_FILE));
+        Files.deleteIfExists(new File(root, this.dataFilename).toPath());
+        tempFile.renameTo(new File(root, this.dataFilename));
 
         this.dataBuffer = dataChannel.map(FileChannel.MapMode.READ_WRITE, 0, MAX_FILE_SIZE);
 
@@ -138,6 +148,14 @@ public class DataFile<K> {
     dataChannel.close();
   }
 
+  public int getMaxSize() {
+    return MAX_FILE_SIZE;
+  }
+
+  public int getUsedSize() {
+    return dataBuffer.position();
+  }
+  
   private byte[] getCurrentBufferValue() {
     int size = dataBuffer.getInt();
     byte[] bytes = new byte[size];

@@ -6,9 +6,7 @@ import io.steviemul.slalom.store.NoopStore;
 import io.steviemul.slalom.store.Store;
 import io.steviemul.slalom.store.StoreException;
 import io.steviemul.slalom.store.kv.KeyValueStore;
-
 import java.util.Map;
-
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

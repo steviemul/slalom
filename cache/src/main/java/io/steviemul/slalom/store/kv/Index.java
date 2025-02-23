@@ -1,10 +1,10 @@
 package io.steviemul.slalom.store.kv;
 
 import static io.steviemul.slalom.store.Utils.base64StringToObject;
+import static io.steviemul.slalom.store.Utils.getStoreFilename;
 import static io.steviemul.slalom.store.Utils.objectToBase64String;
 
 import io.steviemul.slalom.store.StoreException;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -19,13 +19,13 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
-
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class Index<K, V> {
 
-  private static final String FILENAME = "index.db";
+  private static final String FILENAME = "index";
+  private static final String EXT = "db";
   private static final String INDEX_DELIM = ":";
   private static final String NEWLINE = "\n";
 
@@ -37,10 +37,15 @@ public class Index<K, V> {
   private final Thread flushShutdownHook = new Thread(this::saveIndex);
 
   private final File indexFile;
-  private AtomicBoolean dirty = new AtomicBoolean();
+  private final AtomicBoolean dirty = new AtomicBoolean();
 
   public Index(File root, Function<String, V> valueConverter) throws StoreException {
-    this.indexFile = new File(root, FILENAME);
+    this(root, valueConverter, null);
+  }
+
+  public Index(File root, Function<String, V> valueConverter, Integer identifier)
+      throws StoreException {
+    this.indexFile = new File(root, getStoreFilename(FILENAME, EXT, identifier));
     this.valueConverter = valueConverter;
 
     loadIndex();
@@ -76,6 +81,7 @@ public class Index<K, V> {
 
   public void clear() {
     index.clear();
+    removeShutdownFlushHook();
   }
 
   public void putAll(Map<? extends K, ? extends V> m) {
@@ -83,15 +89,13 @@ public class Index<K, V> {
   }
 
   public void close() {
-    removeShutdownFlushHook();
     flushScheduler.shutdown();
   }
 
   @SuppressWarnings("unchecked")
   private void loadIndex() {
 
-    if (!indexFile.exists())
-      return;
+    if (!indexFile.exists()) return;
 
     int count = 0;
 
@@ -114,8 +118,7 @@ public class Index<K, V> {
 
   private void saveIndex() {
 
-    if (!dirty.get())
-      return;
+    if (!dirty.get() || !indexFile.getParentFile().exists()) return;
 
     try (BufferedWriter writer = new BufferedWriter(new FileWriter(indexFile))) {
       int count = 0;

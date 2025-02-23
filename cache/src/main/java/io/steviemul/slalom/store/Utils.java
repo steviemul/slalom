@@ -1,5 +1,6 @@
 package io.steviemul.slalom.store;
 
+import io.steviemul.slalom.store.kv.DataFileRecord;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -65,5 +66,16 @@ public class Utils {
     }
 
     directory.delete();
+  }
+
+  public static String getStoreFilename(String name, String extension, Integer identifier) {
+    return identifier == null ? name + "." + extension : name + "_" + identifier + "." + extension;
+  }
+
+  public static DataFileRecord getDataFileRecord(Object key, Object value) {
+    byte[] keyBytes = objectToBytes(key);
+    byte[] valueBytes = objectToBytes(value);
+
+    return new DataFileRecord(keyBytes, valueBytes);
   }
 }
