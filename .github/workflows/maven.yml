@@ -20,14 +20,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
-      - name: Set up CBL
-        run: |
-          wget https://packages.couchbase.com/releases/couchbase-lite-java/3.1.9/couchbase-lite-java-linux-supportlibs-3.1.9.zip
-          mkdir -p couchbase-lite-libs
-          unzip couchbase-lite-java-linux-supportlibs-3.1.9.zip -d couchbase-lite-libs
-          echo "LD_LIBRARY_PATH=$(pwd)/couchbase-lite-libs" >> $GITHUB_ENV
-
+      - uses: actions/checkout@v4
       - name: Set up JDK 21
         uses: actions/setup-java@v3
         with:

@@ -38,14 +38,15 @@
 
         <dependency>
             <groupId>io.steviemul.slalom</groupId>
+            <artifactId>cache</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>io.steviemul.slalom</groupId>
             <artifactId>utils</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>io.steviemul</groupId>
-            <artifactId>offily</artifactId>
-            <version>${steviemul-offily.version}</version>
-        </dependency>
     </dependencies>
 </project>

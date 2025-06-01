@@ -1,6 +1,6 @@
 package io.steviemul.slalom;
 
-import io.steviemul.offily.Cache;
+import io.steviemul.slalom.cache.CachingMap;
 import io.steviemul.slalom.gui.Visualizer;
 import io.steviemul.slalom.model.java.ASTRoot;
 import io.steviemul.slalom.parser.Parser;
@@ -40,7 +40,8 @@ public class Main {
 
       TypeResolver.addCompilationUnit(astRoot);
 
-      Cache<String, byte[]> astCache = new Cache<>(1000, AST_CACHE);
+      CachingMap<String, byte[]> astCache =
+          new CachingMap<>(1000, 2, AST_CACHE, String.class, byte[].class);
 
       String astJson = ASTRootSerializer.toJson(astRoot);
 

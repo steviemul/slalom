@@ -1,16 +1,13 @@
 package io.steviemul.slalom.analyser;
 
-import io.steviemul.offily.Cache;
+import io.steviemul.slalom.cache.CachingMap;
 import io.steviemul.slalom.utils.FileUtils;
 
 import java.nio.file.Path;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 class AnalyserTest {
-
-  private final Cache<String, byte[]> cache = new Cache<>();
 
   @Test
   void basic_test() {
@@ -18,7 +15,7 @@ class AnalyserTest {
     Path exampleDirectory = FileUtils.findModuleDirectory("slalom", "example");
     Path examplesPath = Path.of(exampleDirectory.toString(), "src", "main", "java");
 
-    Analyser analyser = new Analyser(cache);
+    Analyser analyser = new Analyser(".unit-tests");
 
     analyser.analyze(examplesPath.toString());
   }
@@ -26,15 +23,11 @@ class AnalyserTest {
   @Test
   void webgoat_test() {
 
-    Cache<String, byte[]> webgoatCache = new Cache<>(5, ".ast");
+    CachingMap<String, byte[]> webgoatCache =
+        new CachingMap<>(5, 2, ".ast", String.class, byte[].class);
 
     Analyser analyser = new Analyser(webgoatCache);
 
     analyser.analyze("/Users/stephenmulrennan/dev/git/WebGoat");
-  }
-
-  @AfterEach
-  void teardown() {
-    cache.clear();
   }
 }

@@ -12,6 +12,7 @@ public enum Operator {
   MINUS,
   MOD,
   MUL,
+  TERNARY,
   UNKNOWN;
 
   public static Operator fromToken(String token) {
@@ -38,6 +39,8 @@ public enum Operator {
         return MOD;
       case "*":
         return MUL;
+      case "?":
+        return TERNARY;
       default:
         return UNKNOWN;
     }

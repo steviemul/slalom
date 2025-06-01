@@ -1,26 +1,40 @@
 package io.steviemul.slalom.analyser;
 
-import io.steviemul.offily.Cache;
+import io.steviemul.slalom.cache.CachingMap;
 import io.steviemul.slalom.model.java.ASTRoot;
+import io.steviemul.slalom.model.java.PackageDeclaration;
 import io.steviemul.slalom.parser.Parser;
 import io.steviemul.slalom.serializer.ASTRootSerializer;
 import io.steviemul.slalom.utils.HashUtils;
 import io.steviemul.slalom.utils.IOUtils;
 
 import java.io.File;
-import java.nio.charset.StandardCharsets;
+import java.util.Objects;
+import java.util.Optional;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import static io.steviemul.slalom.utils.MemoryUtils.getMaxHeapSizePercentage;
 
 @Slf4j
 @RequiredArgsConstructor
 public class Analyser {
 
-  private static final String AST_COLLECTION = "ast";
+  private static final String UNKNOWN = "UNKNOWN";
   private static final String JAVA = "java";
 
-  private final Cache<String, byte[]> cache;
+  private final CachingMap<String, byte[]> cache;
+
+  public Analyser(String cacheName) {
+    cache = new CachingMap<>(cacheName, String.class, byte[].class);
+  }
+
+  public Analyser(int cachePercentageLimit, int diskWeight, String cacheName) {
+    long cacheSizeLimit = getMaxHeapSizePercentage(cachePercentageLimit);
+
+    cache = new CachingMap<>(cacheSizeLimit, diskWeight, cacheName, String.class, byte[].class);
+  }
 
   public void analyze(String path) {
     File file = new File(path);
@@ -46,33 +60,28 @@ public class Analyser {
         String source = IOUtils.readFile(path);
         String sha = HashUtils.sha(source);
 
-        if (cache.contains(sha)) {
+        if (cache.containsKey(sha)) {
           byte[] contents = cache.get(sha);
 
           astRoot = ASTRootSerializer.fromJsonBytes(contents);
 
           log.info(
               "AST Successfully loaded from store [{}, {}]",
-              astRoot.packageDeclaration().name(),
+              getPackageName(astRoot),
               astRoot.typeDeclaration().name());
 
         } else {
           astRoot = parser.parse(path, source);
 
-          String packageName =
-              astRoot.packageDeclaration() != null
-                  ? astRoot.packageDeclaration().name()
-                  : "UNKNOWN";
-
           log.info(
               "AST Successfully parsed from source [{}, {}]",
-              packageName,
+              getPackageName(astRoot),
               astRoot.typeDeclaration().name());
         }
 
-        String astJson = ASTRootSerializer.toJson(astRoot);
+        byte[] astJsonBytes = ASTRootSerializer.toJsonBytes(astRoot);
 
-        cache.put(astRoot.sha(), astJson.getBytes(StandardCharsets.UTF_8));
+        cache.put(astRoot.sha(), astJsonBytes);
       }
     } catch (Exception e) {
       log.error("Error parsing file [{}]", path, e);
@@ -92,7 +101,7 @@ public class Analyser {
 
   private void analyseFolder(File directory) {
 
-    for (File child : directory.listFiles()) {
+    for (File child : Objects.requireNonNullElse(directory.listFiles(), new File[0])) {
       if (child.isFile()) {
         analyseSingleFile(child.getAbsolutePath());
       } else {
@@ -101,11 +110,9 @@ public class Analyser {
     }
   }
 
-  public static void main(String args[]) throws Exception {
-    Cache<String, byte[]> cache = new Cache<>(1000, ".ast-cache");
-
-    Analyser analyser = new Analyser(cache);
-
-    analyser.analyze(args[0]);
+  private String getPackageName(ASTRoot astRoot) {
+    return Optional.ofNullable(astRoot.packageDeclaration())
+        .map(PackageDeclaration::name)
+        .orElse(UNKNOWN);
   }
 }

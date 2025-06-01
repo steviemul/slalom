@@ -32,6 +32,18 @@
         </dependency>
 
         <dependency>
+            <groupId>io.steviemul.slalom</groupId>
+            <artifactId>analyser</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.steviemul.slalom</groupId>
+            <artifactId>utils</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>info.picocli</groupId>
             <artifactId>picocli</artifactId>
             <version>${picocli.version}</version>

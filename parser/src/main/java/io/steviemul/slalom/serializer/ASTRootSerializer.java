@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
 import com.fasterxml.jackson.databind.jsontype.PolymorphicTypeValidator;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import io.steviemul.slalom.model.java.ASTRoot;
+import java.nio.charset.StandardCharsets;
 
 public class ASTRootSerializer {
 
@@ -26,12 +27,16 @@ public class ASTRootSerializer {
     return jsonMapper().writerWithDefaultPrettyPrinter().writeValueAsString(astRoot);
   }
 
+  public static byte[] toJsonBytes(ASTRoot astRoot) throws Exception {
+    return toJson(astRoot).getBytes(StandardCharsets.UTF_8);
+  }
+
   public static ASTRoot fromJsonString(String astRootJsonString) throws Exception {
     return jsonMapper().readValue(astRootJsonString, ASTRoot.class);
   }
 
   public static ASTRoot fromJsonBytes(byte[] astRootJsonBytes) throws Exception {
-    return fromJsonString(new String(astRootJsonBytes));
+    return fromJsonString(new String(astRootJsonBytes, StandardCharsets.UTF_8));
   }
 
   public static String toYAML(ASTRoot astRoot) throws Exception {

@@ -17,10 +17,14 @@ import io.steviemul.slalom.model.java.LiteralExpression;
 import io.steviemul.slalom.model.java.MethodCallExpression;
 import io.steviemul.slalom.model.java.Operator;
 import io.steviemul.slalom.model.java.ParExpression;
+import io.steviemul.slalom.model.java.TernaryExpression;
 import io.steviemul.slalom.utils.CollectionUtils;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -55,6 +59,14 @@ public class ExpressionFactory {
           dotExpression.position(ctx);
           return dotExpression;
         }
+      case TERNARY:
+        TernaryExpression ternaryExpression = new TernaryExpression();
+
+        ternaryExpression.condition(fromContext(expressions.get(0)));
+        ternaryExpression.thenValue(fromContext(expressions.get(1)));
+        ternaryExpression.elseValue(fromContext(expressions.get(2)));
+
+        return ternaryExpression;
       default:
         if (expressions.size() == 2) {
           BinaryExpression binaryExpression = new BinaryExpression();
@@ -95,6 +107,8 @@ public class ExpressionFactory {
       expression = fromContext(ctx, Operator.fromToken(ctx.bop.getText()));
     } else if (ctx.lambdaExpression() != null) {
       expression = fromContext(ctx.lambdaExpression());
+    } else if (isTernaryExpression(ctx)) {
+      expression = fromContext(ctx, Operator.fromToken(ctx.bop.getText()));
     } else {
       logUnhandled(ctx);
     }
@@ -106,6 +120,12 @@ public class ExpressionFactory {
 
   public static Expression fromContext(JavaParser.LambdaExpressionContext ctx) {
     LambdaExpression lambdaExpression = new LambdaExpression();
+
+    if (ctx.lambdaBody().expression() != null) {
+      lambdaExpression.expression(ExpressionFactory.fromContext(ctx.lambdaBody().expression()));
+    } else if (ctx.lambdaBody().block() != null) {
+      lambdaExpression.block(StatementFactory.fromContext(ctx.lambdaBody().block()));
+    }
 
     logUnhandled(ctx);
 
@@ -234,6 +254,10 @@ public class ExpressionFactory {
 
   private static boolean isBinaryExpression(JavaParser.ExpressionContext ctx) {
     return ctx.bop != null && !ctx.bop.getText().equals(".") && ctx.expression().size() == 2;
+  }
+
+  private static boolean isTernaryExpression(JavaParser.ExpressionContext ctx) {
+    return ctx.bop != null && ctx.bop.getText().equals("?") && ctx.expression().size() == 3;
   }
 
   private static IdentifierExpression getSpecialMethod(
