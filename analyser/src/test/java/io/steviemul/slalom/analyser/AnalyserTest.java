@@ -19,15 +19,5 @@ class AnalyserTest {
 
     analyser.analyze(examplesPath.toString());
   }
-
-  @Test
-  void webgoat_test() {
-
-    CachingMap<String, byte[]> webgoatCache =
-        new CachingMap<>(5, 2, ".ast", String.class, byte[].class);
-
-    Analyser analyser = new Analyser(webgoatCache);
-
-    analyser.analyze("/Users/stephenmulrennan/dev/git/WebGoat");
-  }
+  
 }
