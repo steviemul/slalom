@@ -11,6 +11,7 @@ public class LangClasses {
           "Boolean",
           "Byte",
           "Character",
+          "CharSequence",
           "Class",
           "Double",
           "Enum",
@@ -21,6 +22,7 @@ public class LangClasses {
           "Number",
           "Object",
           "ProcessBuilder",
+          "Record",
           "Runtime",
           "Short",
           "String",
@@ -28,5 +30,6 @@ public class LangClasses {
           "StringBuffer",
           "System",
           "Thread",
-          "ThreadLocal");
+          "ThreadLocal",
+          "Void");
 }

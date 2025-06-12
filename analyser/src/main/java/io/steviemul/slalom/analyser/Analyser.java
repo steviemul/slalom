@@ -1,21 +1,21 @@
 package io.steviemul.slalom.analyser;
 
-import io.steviemul.slalom.cache.CachingMap;
+import static io.steviemul.slalom.utils.MemoryUtils.getMaxHeapSizePercentage;
+
+import io.steviemul.slalom.cache.ObjectStore;
 import io.steviemul.slalom.model.java.ASTRoot;
 import io.steviemul.slalom.model.java.PackageDeclaration;
 import io.steviemul.slalom.parser.Parser;
 import io.steviemul.slalom.serializer.ASTRootSerializer;
 import io.steviemul.slalom.utils.HashUtils;
 import io.steviemul.slalom.utils.IOUtils;
-
 import java.io.File;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Optional;
-
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-import static io.steviemul.slalom.utils.MemoryUtils.getMaxHeapSizePercentage;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -24,16 +24,18 @@ public class Analyser {
   private static final String UNKNOWN = "UNKNOWN";
   private static final String JAVA = "java";
 
-  private final CachingMap<String, byte[]> cache;
+  private Set<String> shas = new HashSet<>();
+
+  private final ObjectStore<String, byte[]> cache;
 
   public Analyser(String cacheName) {
-    cache = new CachingMap<>(cacheName, String.class, byte[].class);
+    cache = new ObjectStore<>(cacheName, String.class, byte[].class);
   }
 
   public Analyser(int cachePercentageLimit, int diskWeight, String cacheName) {
     long cacheSizeLimit = getMaxHeapSizePercentage(cachePercentageLimit);
 
-    cache = new CachingMap<>(cacheSizeLimit, diskWeight, cacheName, String.class, byte[].class);
+    cache = new ObjectStore<>(cacheSizeLimit, diskWeight, cacheName, String.class, byte[].class);
   }
 
   public void analyze(String path) {
@@ -44,13 +46,30 @@ public class Analyser {
     }
 
     if (file.isFile()) {
-      analyseSingleFile(path);
+      parseSingleFile(path);
     } else if (file.isDirectory()) {
-      analyseFolder(path);
+      parseFilesInFolder(path);
+    }
+
+    link();
+  }
+
+  private void link() {
+
+    for (String sha : shas) {
+      try {
+        byte[] contents = cache.get(sha);
+
+        ASTRoot ast = ASTRootSerializer.fromJsonBytes(contents);
+
+        System.out.println(ast);
+      } catch (Exception e) {
+        log.error("Error loading class definition from cache", e);
+      }
     }
   }
 
-  public void analyseSingleFile(String path) {
+  private void parseSingleFile(String path) {
 
     Parser parser = new Parser();
     ASTRoot astRoot;
@@ -82,13 +101,14 @@ public class Analyser {
         byte[] astJsonBytes = ASTRootSerializer.toJsonBytes(astRoot);
 
         cache.put(astRoot.sha(), astJsonBytes);
+        shas.add(astRoot.sha());
       }
     } catch (Exception e) {
       log.error("Error parsing file [{}]", path, e);
     }
   }
 
-  public void analyseFolder(String path) {
+  private void parseFilesInFolder(String path) {
 
     File directory = new File(path);
 
@@ -96,16 +116,16 @@ public class Analyser {
       throw new IllegalArgumentException("Path specified must exist and be a directory");
     }
 
-    analyseFolder(directory);
+    parseFilesInFolder(directory);
   }
 
-  private void analyseFolder(File directory) {
+  private void parseFilesInFolder(File directory) {
 
     for (File child : Objects.requireNonNullElse(directory.listFiles(), new File[0])) {
       if (child.isFile()) {
-        analyseSingleFile(child.getAbsolutePath());
+        parseSingleFile(child.getAbsolutePath());
       } else {
-        analyseFolder(child.getAbsolutePath());
+        parseFilesInFolder(child.getAbsolutePath());
       }
     }
   }

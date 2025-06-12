@@ -18,6 +18,7 @@
         <module>slalom-cli</module>
         <module>utils</module>
         <module>cache</module>
+        <module>graph</module>
     </modules>
 
     <properties>
@@ -109,7 +110,7 @@
         <pluginManagement>
             <plugins>
                 <plugin>
-                    <groupId>om.spotify.fmt</groupId>
+                    <groupId>com.spotify.fmt</groupId>
                     <artifactId>fmt-maven-plugin</artifactId>
                     <version>${fmt-maven-plugin.version}</version>
                     <executions>

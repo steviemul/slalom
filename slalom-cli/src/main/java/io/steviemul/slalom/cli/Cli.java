@@ -19,5 +19,4 @@ public class Cli {
     int exitCode = new CommandLine(new Cli()).execute(args);
     System.exit(exitCode);
   }
-  
 }

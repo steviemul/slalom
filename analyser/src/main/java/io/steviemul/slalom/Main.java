@@ -1,16 +1,14 @@
 package io.steviemul.slalom;
 
-import io.steviemul.slalom.cache.CachingMap;
+import io.steviemul.slalom.cache.ObjectStore;
 import io.steviemul.slalom.gui.Visualizer;
 import io.steviemul.slalom.model.java.ASTRoot;
 import io.steviemul.slalom.parser.Parser;
 import io.steviemul.slalom.resolver.TypeResolver;
 import io.steviemul.slalom.serializer.ASTRootSerializer;
 import io.steviemul.slalom.utils.IOUtils;
-
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
-
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -40,8 +38,8 @@ public class Main {
 
       TypeResolver.addCompilationUnit(astRoot);
 
-      CachingMap<String, byte[]> astCache =
-          new CachingMap<>(1000, 2, AST_CACHE, String.class, byte[].class);
+      ObjectStore<String, byte[]> astCache =
+          new ObjectStore<>(1000, 2, AST_CACHE, String.class, byte[].class);
 
       String astJson = ASTRootSerializer.toJson(astRoot);
 

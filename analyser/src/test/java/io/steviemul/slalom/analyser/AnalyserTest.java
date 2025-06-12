@@ -1,10 +1,7 @@
 package io.steviemul.slalom.analyser;
 
-import io.steviemul.slalom.cache.CachingMap;
 import io.steviemul.slalom.utils.FileUtils;
-
 import java.nio.file.Path;
-
 import org.junit.jupiter.api.Test;
 
 class AnalyserTest {
@@ -19,5 +16,4 @@ class AnalyserTest {
 
     analyser.analyze(examplesPath.toString());
   }
-  
 }

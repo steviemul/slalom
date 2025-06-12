@@ -1,7 +1,6 @@
 package io.steviemul.slalom.cache;
 
 import java.io.File;
-
 import lombok.extern.slf4j.Slf4j;
 import org.ehcache.Cache;
 import org.ehcache.CacheManager;
@@ -9,22 +8,25 @@ import org.ehcache.PersistentCacheManager;
 import org.ehcache.config.builders.CacheConfigurationBuilder;
 import org.ehcache.config.builders.CacheManagerBuilder;
 import org.ehcache.config.builders.ResourcePoolsBuilder;
+import org.ehcache.config.units.EntryUnit;
 import org.ehcache.config.units.MemoryUnit;
 
 @Slf4j
-public class CachingMap<K, V> {
+public class ObjectStore<K, V> {
 
   private static final String CACHE_ROOT = ".cache";
-  private static final int STORAGE_LIMIT_MB = 100;
+  private static final int MAX_DISK_CACHE_SIZE_MB = 1024;
 
   private final Cache<K, V> internalCache;
 
-  public CachingMap(String name, Class<K> keyType, Class<V> valueType) {
+  public ObjectStore(String name, Class<K> keyType, Class<V> valueType) {
     this.internalCache = createInternalCache(-1, -1, name, keyType, valueType);
   }
 
-  public CachingMap(long maxMemoryObjects, int diskWeight, String name, Class<K> keyType, Class<V> valueType) {
-    this.internalCache = createInternalCache(maxMemoryObjects, diskWeight, name, keyType, valueType);
+  public ObjectStore(
+      long maxMemoryObjects, int diskWeight, String name, Class<K> keyType, Class<V> valueType) {
+    this.internalCache =
+        createInternalCache(maxMemoryObjects, diskWeight, name, keyType, valueType);
   }
 
   public V get(K key) {
@@ -70,6 +72,8 @@ public class CachingMap<K, V> {
         keyType,
         valueType);
 
+    closeCacheManagerOnShutdown(cacheManager);
+
     return cacheManager.getCache(name, keyType, valueType);
   }
 
@@ -87,8 +91,8 @@ public class CachingMap<K, V> {
                     keyType,
                     valueType,
                     ResourcePoolsBuilder.newResourcePoolsBuilder()
-                        .heap(maxMemorySize, MemoryUnit.MB)
-                        .disk(maxMemorySize * diskWeight, MemoryUnit.MB, true)))
+                        .heap(1000, EntryUnit.ENTRIES)
+                        .disk(MAX_DISK_CACHE_SIZE_MB, MemoryUnit.MB, true)))
             .build(true);
 
     log.info(
@@ -98,6 +102,12 @@ public class CachingMap<K, V> {
         keyType,
         valueType);
 
+    closeCacheManagerOnShutdown(persistentCacheManager);
+
     return persistentCacheManager.getCache(name, keyType, valueType);
+  }
+
+  private void closeCacheManagerOnShutdown(CacheManager cacheManager) {
+    Runtime.getRuntime().addShutdownHook(new Thread(cacheManager::close));
   }
 }

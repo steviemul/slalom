@@ -6,7 +6,6 @@ import java.util.Arrays;
 import java.util.concurrent.CountDownLatch;
 import java.util.function.Consumer;
 import javax.swing.*;
-
 import lombok.extern.slf4j.Slf4j;
 import org.antlr.v4.gui.TreeViewer;
 import org.antlr.v4.runtime.tree.ParseTree;
@@ -21,11 +20,15 @@ public class ParseTreeViewer extends TreeViewer {
   public static void showTree(String[] ruleNames, ParseTree parseTree) {
     CountDownLatch latch = new CountDownLatch(1);
 
-    SwingUtilities.invokeLater(() -> {
-      showTree(ruleNames, parseTree, (e) -> {
-        latch.countDown();
-      });
-    });
+    SwingUtilities.invokeLater(
+        () -> {
+          showTree(
+              ruleNames,
+              parseTree,
+              (e) -> {
+                latch.countDown();
+              });
+        });
 
     try {
       latch.await();
@@ -34,7 +37,8 @@ public class ParseTreeViewer extends TreeViewer {
     }
   }
 
-  public static void showTree(String[] ruleNames, ParseTree parseTree, Consumer<WindowEvent> onClose) {
+  public static void showTree(
+      String[] ruleNames, ParseTree parseTree, Consumer<WindowEvent> onClose) {
 
     TreeViewer viewer = new TreeViewer(Arrays.asList(ruleNames), parseTree);
 
@@ -42,12 +46,13 @@ public class ParseTreeViewer extends TreeViewer {
 
     dialog.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-    dialog.addWindowListener(new WindowAdapter() {
-      @Override
-      public void windowClosed(WindowEvent e) {
-        onClose.accept(e);
-      }
-    });
+    dialog.addWindowListener(
+        new WindowAdapter() {
+          @Override
+          public void windowClosed(WindowEvent e) {
+            onClose.accept(e);
+          }
+        });
 
     dialog.pack();
     dialog.setVisible(true);

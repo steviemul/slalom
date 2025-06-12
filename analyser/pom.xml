@@ -41,7 +41,7 @@
             <artifactId>cache</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
-        
+
         <dependency>
             <groupId>io.steviemul.slalom</groupId>
             <artifactId>utils</artifactId>
@@ -49,4 +49,13 @@
         </dependency>
 
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.spotify.fmt</groupId>
+                <artifactId>fmt-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 </project>

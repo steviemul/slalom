@@ -4,14 +4,13 @@ import io.steviemul.slalom.antlr.JavaLexer;
 import io.steviemul.slalom.antlr.JavaParser;
 import io.steviemul.slalom.utils.IOUtils;
 import io.steviemul.slalom.utils.ParseTreeViewer;
+import java.io.File;
+import java.util.concurrent.Callable;
 import lombok.extern.slf4j.Slf4j;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 import picocli.CommandLine;
-
-import java.io.File;
-import java.util.concurrent.Callable;
 
 @CommandLine.Command(
     name = "visualize",
@@ -47,5 +46,4 @@ public class Visualize implements Callable<Integer> {
 
     ParseTreeViewer.showTree(tokenParser.getRuleNames(), tree);
   }
-  
 }

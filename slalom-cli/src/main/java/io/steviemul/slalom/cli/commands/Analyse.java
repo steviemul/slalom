@@ -1,9 +1,7 @@
 package io.steviemul.slalom.cli.commands;
 
 import io.steviemul.slalom.analyser.Analyser;
-
 import java.util.concurrent.Callable;
-
 import lombok.extern.slf4j.Slf4j;
 import picocli.CommandLine;
 
