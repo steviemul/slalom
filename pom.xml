@@ -30,7 +30,7 @@
 
         <!-- 3rd party libraries -->
         <antlr.version>4.13.0</antlr.version>
-        <mojo.version>3.4.0</mojo.version>
+        <mojo.version>3.6.1</mojo.version>
         <lombok.version>1.18.34</lombok.version>
         <jackson.version>2.14.2</jackson.version>
         <logback.version>1.5.13</logback.version>
