@@ -27,23 +27,23 @@
         <maven.compiler.target>21</maven.compiler.target>
 
         <!-- plugins -->
-        <fmt-maven-plugin.version>2.25</fmt-maven-plugin.version>
+        <fmt-maven-plugin.version>2.27</fmt-maven-plugin.version>
 
         <!-- 3rd party libraries -->
-        <antlr.version>4.13.0</antlr.version>
-        <mojo.version>3.4.0</mojo.version>
-        <lombok.version>1.18.34</lombok.version>
+        <antlr.version>4.13.2</antlr.version>
+        <mojo.version>3.6.1</mojo.version>
+        <lombok.version>1.18.38</lombok.version>
         <jackson.version>2.14.2</jackson.version>
-        <logback.version>1.5.13</logback.version>
-        <bcel.version>6.7.0</bcel.version>
-        <reflections.version>0.9.12</reflections.version>
-        <jackson.version>2.15.2</jackson.version>
+        <logback.version>1.5.18</logback.version>
+        <bcel.version>6.10.0</bcel.version>
+        <reflections.version>0.10.2</reflections.version>
+        <jackson.version>2.19.1</jackson.version>
         <picocli.version>4.7.7</picocli.version>
-        <commons-codec.version>1.16.0</commons-codec.version>
+        <commons-codec.version>1.18.0</commons-codec.version>
 
         <!-- test libraries -->
         <junit.jupiter.version>5.8.1</junit.jupiter.version>
-        <surefire.plugin.version>3.1.2</surefire.plugin.version>
+        <surefire.plugin.version>3.5.3</surefire.plugin.version>
     </properties>
 
     <dependencies>
