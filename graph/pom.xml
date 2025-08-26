@@ -15,7 +15,7 @@
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <kuzudb.version>0.10.0</kuzudb.version>
+        <kuzudb.version>0.11.2</kuzudb.version>
     </properties>
 
     <dependencies>
